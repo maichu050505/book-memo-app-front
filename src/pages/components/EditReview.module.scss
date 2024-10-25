@@ -1,0 +1,57 @@
+.stars {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  span {
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+    margin-right: 2px;
+    display: inline-block;
+  }
+  .gray {
+    color: #cdcdcd; // ホバーしていないときの色
+  }
+  .yellow {
+    color: #f5b628; // 選択された星の色
+  }
+  //   span:hover {
+  //     color: #f5b628; // ホバーした星
+  //   }
+}
+.resetButton {
+  border: none;
+  color: #333;
+  margin-left: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  img {
+    margin-right: 4px;
+  }
+}
+
+.netabare {
+  display: flex;
+  flex-direction: row;
+  input {
+    display: none;
+  }
+  label {
+    display: block;
+    width: 130px;
+    height: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+    line-height: 40px;
+    font-size: 12px;
+    background: #fff;
+    color: #878787;
+    cursor: pointer;
+    margin-right: 10px;
+    &.checked {
+      background: #0284c7;
+      color: #fff;
+      font-weight: bold;
+    }
+  }
+}

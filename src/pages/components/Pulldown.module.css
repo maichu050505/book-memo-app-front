@@ -1,0 +1,19 @@
+.pulldown {
+  width: 100%;
+  height: 55px;
+  background-color: #fff;
+  border: none;
+  padding: 0 20px;
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background-image: url("./img/icon_down.svg");
+  background-repeat: no-repeat;
+  background-position: right 20px center;
+  background-size: 16px 16px;
+}
+.pulldown:focus {
+  border-color: #0284c7;
+  outline: none;
+}/*# sourceMappingURL=Pulldown.module.css.map */

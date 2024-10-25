@@ -1,0 +1,59 @@
+.bookshelf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: -30px;
+}
+.bookshelf::before, .bookshelf::after {
+  content: "";
+  display: block;
+  width: calc((100% - 193px) / 4);
+}
+.bookshelf::before {
+  order: 1;
+}
+.bookshelf li {
+  width: calc((100% - 193px) / 4);
+  margin-top: 30px;
+}
+
+.bookBox {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  transition: all 0.3s;
+}
+.bookBox:hover {
+  opacity: 0.7;
+}
+.bookBox .coverArea {
+  width: 200px;
+  height: 200px;
+  background: #cdcdcd;
+  text-align: center;
+}
+.bookBox .coverArea img {
+  height: 100%;
+  width: auto;
+}
+.bookBox .iconArea {
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+}
+.bookBox .iconArea .stars,
+.bookBox .iconArea .review,
+.bookBox .iconArea .memo {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.bookBox .iconArea .stars {
+  color: #cdcdcd;
+}
+.bookBox .iconArea .stars .yellow {
+  color: #f5b628;
+}/*# sourceMappingURL=Book.module.css.map */

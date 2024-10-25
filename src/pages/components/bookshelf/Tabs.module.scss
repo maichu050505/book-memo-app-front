@@ -1,0 +1,21 @@
+.tab {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #cdcdcd;
+  margin-bottom: 32px;
+  .tabItem {
+    a {
+      display: block;
+      padding: 16px 25px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #606060;
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+    &.active {
+      border-bottom: 3px solid #0284c7;
+    }
+  }
+}

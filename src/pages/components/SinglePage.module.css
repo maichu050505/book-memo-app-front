@@ -1,0 +1,9 @@
+.myMemo,
+.others {
+  margin-bottom: 60px;
+  display: none;
+}
+
+.active {
+  display: block;
+}/*# sourceMappingURL=SinglePage.module.css.map */

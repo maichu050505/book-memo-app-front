@@ -1,0 +1,110 @@
+@charset "UTF-8";
+/* リセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #ececec;
+}
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+a {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+  box-shadow: none;
+}
+
+h3 {
+  color: #333;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.linkButton {
+  display: block;
+  width: 130px;
+  height: 40px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 40px;
+  font-size: 12px;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+.linkButton.blue {
+  background: #0284c7;
+  color: #fff;
+}
+.linkButton.gray {
+  background: #878787;
+  color: #fff;
+}
+.linkButton.white_blue {
+  background: #fff;
+  border: 2px solid #0284c7;
+  color: #0284c7;
+}
+.linkButton.white_red {
+  background: #fff;
+  border: 2px solid #f5666c;
+  color: #f5666c;
+}
+.linkButton.middle {
+  width: 200px;
+  height: 45px;
+  font-size: 15px;
+}
+.linkButton.center {
+  margin: 0 auto;
+}
+.linkButton:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.add {
+  width: 648px;
+  min-height: 232px;
+  border: 2px dashed #cdcdcd;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.tab {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid #cdcdcd;
+  margin-bottom: 32px;
+}
+.tab .tabItem {
+  display: block;
+  padding: 16px 25px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #606060;
+}
+.tab .tabItem:hover {
+  opacity: 0.7;
+}
+.tab .tabItem.active {
+  border-bottom: 3px solid #0284c7;
+}/*# sourceMappingURL=app.css.map */

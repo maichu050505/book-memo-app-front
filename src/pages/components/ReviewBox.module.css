@@ -1,0 +1,39 @@
+.reviewBox {
+  background: #fff;
+  padding: 20px;
+  color: #333;
+}
+
+.info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+
+.icon {
+  margin-right: 18px;
+}
+.icon img {
+  width: 30px;
+  height: 30px;
+}
+
+.userName {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.date {
+  font-size: 12px;
+}
+
+.stars {
+  font-size: 18px;
+  color: #f5b628;
+  margin-bottom: 20px;
+}
+
+.review_txt {
+  font-size: 14px;
+  line-height: 1.7;
+}/*# sourceMappingURL=ReviewBox.module.css.map */

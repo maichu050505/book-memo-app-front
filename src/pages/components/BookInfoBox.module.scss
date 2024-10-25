@@ -1,0 +1,73 @@
+.bookInfoBox {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  padding: 20px;
+  background: #fff;
+  margin-bottom: 30px;
+}
+.cover {
+  margin-right: 40px;
+  img {
+    width: 80px;
+  }
+}
+.info {
+  margin-right: 10px;
+}
+.bookTitle {
+  display: block;
+  color: #0284c7;
+  text-decoration: underline;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  &:hover {
+    text-decoration: none;
+  }
+}
+.numbers {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.registrants,
+.reviewers {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    width: 11px;
+    margin-right: 2px;
+  }
+}
+.registrants {
+  color: #89c601;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 14px;
+}
+.stars {
+  color: #f5b628;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 14px;
+}
+.reviewers {
+  color: #0284c7;
+  font-size: 12px;
+  font-weight: bold;
+}
+.subInfo {
+  font-size: 12px;
+}
+.author {
+  color: #0284c7;
+  text-decoration: underline;
+  &:hover {
+    text-decoration: none;
+  }
+}
