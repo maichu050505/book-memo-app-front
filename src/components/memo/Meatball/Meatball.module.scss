@@ -1,0 +1,42 @@
+.icon_meatball {
+  position: absolute;
+  top: 12px;
+  right: 23px;
+  cursor: pointer;
+  img {
+    width: 24px;
+    height: 10px;
+  }
+  &:hover {
+    .dropdown {
+      opacity: 1;
+    }
+  }
+}
+.dropdown {
+  background: #fff;
+  opacity: 0;
+  width: 140px;
+  position: absolute;
+  top: -30px;
+  left: 30px;
+  border: 1px solid #ECECEC;
+  padding: 15px;
+  ul {
+    li {
+      font-size: 15px;
+      cursor: pointer;
+      &:not(:last-child){
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #ECECEC;
+      }
+      &.delete {
+        color: #F5666C;
+      }
+      &:hover {
+        color: #0284C7;
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+.header_search {
+    width: 323px;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    &::placeholder {
+        color: #878787;
+        font-weight: bold;
+    }
+    &:focus {
+        outline: 0;
+    }
+}
+.header_search_submit {
+    position: absolute;
+    top: -0.5px;
+    right: 0;
+    cursor: pointer;
+    padding: 10px;
+    border: none;
+    background: none;
+    color: #333;
+    font-size: 10px;
+    transition: 0.5s;
+}

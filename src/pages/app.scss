@@ -19,13 +19,6 @@ a {
   color: inherit;
   box-shadow: none;
 }
-h3 {
-  color: #333;
-  font-weight: 600;
-  font-size: 15px;
-  margin-bottom: 10px;
-  margin-top: 20px;
-}
 .linkButton {
   display: block;
   width: 130px;
@@ -82,23 +75,108 @@ h3 {
   margin-bottom: 10px;
 }
 
-.tab {
+.tabs {
   display: flex;
   flex-direction: row;
   border-bottom: 1px solid #cdcdcd;
   margin-bottom: 32px;
+
   .tabItem {
     display: block;
     padding: 16px 25px;
     font-size: 14px;
     font-weight: bold;
     color: #606060;
-    &:hover {
-      opacity: 0.7;
-    }
+    border: none;
+    background: none;
+    transition: all 0.3s ease;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
 
     &.active {
       border-bottom: 3px solid #0284c7;
+      color: #0284c7;
     }
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.tab-content {
+  width: 100%;
+}
+
+
+/* マージン */
+.mt10 {
+  margin-top: 10px;
+}
+.mt60 {
+  margin-top: 60px;
+}
+.mb10 {
+  margin-bottom: 10px;
+}
+.mb30 {
+  margin-bottom: 30px;
+}
+.mb60 {
+  margin-bottom: 60px;
+}
+
+//星（評価）
+.stars {
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  p {
+    font-size: 14px;
+    color: #878787;
+    margin-right: 40px;
+  }
+  span {
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+    font-size: 22px;
+    margin-right: 4px;
+    display: inline-block;
+  }
+  .gray {
+    color: #cdcdcd; // ホバーしていないときの色
+  }
+  .yellow {
+    color: #f5b628; // 選択された星の色
+  }
+}
+.starsCurrent {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  p {
+    font-size: 14px;
+    color: #878787;
+    margin-right: 40px;
+  }
+  span {
+    transition: color 0.2s ease-in-out;
+    font-size: 18px;
+    margin-right: 4px;
+    display: inline-block;
+  }
+  .gray {
+    color: #cdcdcd; // ホバーしていないときの色
+  }
+  .yellow {
+    color: #f5b628; // 選択された星の色
+  }
+}
+
+// 検索結果一覧　Search.jsx
+.list {
+  li:not(:last-child) {
+    border-bottom: 1px solid #dcdcdc;
   }
 }

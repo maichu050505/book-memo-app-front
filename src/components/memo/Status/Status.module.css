@@ -1,0 +1,11 @@
+.status {
+  background: #fff;
+  width: 100%;
+  height: 55px;
+  padding: 20px;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  position: relative;
+}/*# sourceMappingURL=Status.module.css.map */

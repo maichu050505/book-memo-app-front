@@ -1,0 +1,50 @@
+.addMemoBoxContainer {
+    position: relative;
+    background: #fff;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 20px;
+}
+.addMemoBox {
+    width: 100%;
+    height: 54px;
+    border: none;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    outline: none;
+    resize: none;
+}
+
+.iconButton {
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.imagePreview {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    img {
+        max-width: 100%;
+    }
+}
+.removeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    opacity: 0.7;
+  }
+}

@@ -1,0 +1,30 @@
+.reviewBox {
+  background: #fff;
+  padding: 20px;
+  color: #333;
+  position: relative;
+}
+.info {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+.icon {
+  margin-right: 18px;
+  img {
+    width: 30px;
+    height: 30px;
+  }
+}
+.userName {
+  font-size: 12px;
+  font-weight: 600;
+}
+.date {
+  font-size: 12px;
+}
+.review_txt {
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-line; /* 改行を反映 */
+}

@@ -1,0 +1,31 @@
+.resetButton {
+  border: none;
+  color: #F5666C;
+  margin-left: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid #F5666C;
+  padding: 5px;
+  background: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  img {
+    margin-right: 4px;
+    width: 14px;
+    height: auto;
+  }
+  &:hover {
+    opacity: 0.7;
+  }
+}
+.textareaReview {
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  font-size: 14px;
+  line-height: 1.7;
+  &:focus {
+    outline: none;
+  }
+}

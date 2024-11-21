@@ -1,0 +1,18 @@
+.bookshelf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: -30px;
+}
+.bookshelf::before, .bookshelf::after {
+  content: "";
+  display: block;
+  width: calc((100% - 193px) / 4);
+}
+.bookshelf::before {
+  order: 1;
+}
+.bookshelf li {
+  width: calc((100% - 193px) / 4);
+  margin-top: 30px;
+}/*# sourceMappingURL=Bookshelf.module.css.map */

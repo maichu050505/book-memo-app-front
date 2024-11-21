@@ -1,0 +1,11 @@
+.header_button {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+.header_button:not(:last-child) {
+  margin-right: 30px;
+}
+.header_button:hover {
+  text-decoration: underline;
+}/*# sourceMappingURL=HeaderButton.module.css.map */
