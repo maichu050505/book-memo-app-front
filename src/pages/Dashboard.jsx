@@ -1,19 +1,53 @@
 import "./app.scss";
+import { useState } from "react";
 import { Header } from "../components/common/Header/Header.jsx";
 import { Searchbox } from "../components/common/Searchbox/Searchbox.jsx";
 import { DropdownMenu } from "../components/common/DropdownMenu/DropdownMenu.jsx";
 import { Main } from "../components/common/Main/Main.jsx";
 import { Bookshelf } from "../components/bookshelf/Bookshelf/Bookshelf.jsx";
-import { BookshelfTabs } from "../components/bookshelf/BookshelfTabs/BookshelfTabs.jsx";
+
 
 export const Dashboard = () => {
+  const [selectedTab, setSelectedTab] = useState("all"); // 現在のタブを管理
+
   return (
     <>
       <Header children={[<Searchbox key="searchbox" />, <DropdownMenu key="dropdownMenu" />]} />
-      <Main
-        width="1000"
-        children={[<BookshelfTabs key="bookshelfTabs" />, <Bookshelf key="bookshelf" />]}
-      />
+      <Main width="1000">
+        {/* タブのヘッダー */}
+        <div className="tabs">
+          <button
+            className={`tabItem ${selectedTab === "all" ? "active" : ""}`}
+            onClick={() => setSelectedTab("all")}
+          >
+            すべて
+          </button>
+          <button
+            className={`tabItem ${selectedTab === "want" ? "active" : ""}`}
+            onClick={() => setSelectedTab("want")}
+          >
+            読みたい
+          </button>
+          <button
+            className={`tabItem ${selectedTab === "now" ? "active" : ""}`}
+            onClick={() => setSelectedTab("now")}
+          >
+            今読んでいる
+          </button>
+          <button
+            className={`tabItem ${selectedTab === "done" ? "active" : ""}`}
+            onClick={() => setSelectedTab("done")}
+          >
+            読み終わった
+          </button>
+        </div>
+
+        {/* タブの内容 */}
+        {selectedTab === "all" && <Bookshelf key="bookshelfAll" />}
+        {selectedTab === "want" && <Bookshelf key="bookshelfWant" />}
+        {selectedTab === "now" && <Bookshelf key="bookshelfNow" />}
+        {selectedTab === "done" && <Bookshelf key="bookshelfDone" />}
+      </Main>
     </>
   );
 };

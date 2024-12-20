@@ -7,6 +7,9 @@ import { BackButton } from "../components/common/BackButton/BackButton.jsx";
 import { BookInfoBox } from "../components/memo/BookInfoBox/BookInfoBox.jsx";
 import { Heading } from "../components/common/Heading/Heading.jsx";
 import { Tabs } from "../components/memo/Tabs/Tabs.jsx";
+import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
+import { MemoProvider } from "../components/providers/MemoProvider.jsx";
+import { StatusProvider } from "../components/providers/StatusProvider.jsx";
 
 export const SinglePage = () => {
   return (
@@ -21,7 +24,14 @@ export const SinglePage = () => {
           buttonColor="white_red"
           buttonChildren="本棚から削除"
         />
-        <Tabs key="tabs" />
+        
+        <StatusProvider>
+          <ReviewProvider>
+            <MemoProvider>
+              <Tabs key="tabs" />
+            </MemoProvider>
+          </ReviewProvider>
+        </StatusProvider>
       </Main>
     </>
   );
