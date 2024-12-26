@@ -91,6 +91,7 @@ export const Search = () => {
                     publishedDate={result.publishedDate}
                     coverImageUrl={result.coverImageUrl}
                     amazonLink={result.amazonLink}
+                    query={searchTerm} //検索キーワードを渡す
                   />
                 </li>
               ))}
