@@ -1,5 +1,6 @@
 import "./app.scss";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "../components/common/Header/Header.jsx";
 import { Searchbox } from "../components/common/Searchbox/Searchbox.jsx";
 import { DropdownMenu } from "../components/common/DropdownMenu/DropdownMenu.jsx";
@@ -11,40 +12,34 @@ import { Tabs } from "../components/memo/Tabs/Tabs.jsx";
 import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
 import { MemoProvider } from "../components/providers/MemoProvider.jsx";
 import { StatusProvider } from "../components/providers/StatusProvider.jsx";
+import { useBook } from "../hooks/books/useBooks.js";
 
 export const SinglePage = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  // const bookData = location.state; // navigateで渡されたデータ
-  const { bookData, query } = location.state || {}; // 検索条件も受け取る
-  console.log("SinglePageに渡されたstate:", location.state);
-  if (!bookData) {
-    return <div>本の情報が見つかりませんでした。</div>;
+  const location = useLocation(); //現在のURLに関する情報を取得するために使う
+
+  const params = new URLSearchParams(location.search);
+  // location.searchには、クエリパラメータ部分が文字列として格納される。「?id=1」など。
+  // location.searchを元にURLSearchParamsオブジェクトを作成。(key=valueのペアを管理するオブジェクトが作成)
+
+  const id = params.get("id"); // params.get("id")は、URLSearchParamsのメソッドの一つで、指定したクエリパラメータのキーidに対応する値、すなわち1などが取得できる。
+
+  const { book } = useBook(id);
+
+  if (!book) {
+    return <div>書籍データがありません</div>;
   }
-  const searchQuery = query;
 
   return (
     <>
       <Header children={[<Searchbox key="searchbox" />, <DropdownMenu key="dropdownMenu" />]} />
       <Main width="648">
-        <BackButton key="backButton" to={`/search?query=${encodeURIComponent(searchQuery)}`} />
+        <BackButton key="backButton" />
         <Heading key="pageTitle" type="h2" children="本の詳細" />
-        <BookInfoBox
-          key="bookInfoBox"
-          buttonLinkTo="/dashboard"
-          buttonColor="white_red"
-          buttonChildren="本棚から削除"
-          title={bookData.title}
-          author={bookData.author}
-          publisher={bookData.publisher}
-          publishedDate={bookData.publishedDate}
-          coverImageUrl={bookData.coverImageUrl}
-          amazonLink={bookData.amazonLink}
-        />
+        <BookInfoBox key="bookInfoBox" book={book} buttonLinkTo="/dashboard" />
 
         <StatusProvider>
-          <ReviewProvider>
-            <MemoProvider>
+          <ReviewProvider bookId={id}>
+            <MemoProvider bookId={id}>
               <Tabs key="tabs" />
             </MemoProvider>
           </ReviewProvider>

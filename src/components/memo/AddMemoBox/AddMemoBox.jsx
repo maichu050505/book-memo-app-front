@@ -6,9 +6,12 @@ import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 export const AddMemoBox = ({ type, memo } ) => {
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null);
-  const [localMemoText, setLocalMemoText] = useState("");
-  const [localMemoImages, setLocalMemoImages] = useState([]);
-  const { addMemo, saveMemo } = useContext(MemoContext);
+  // const [localMemoText, setLocalMemoText] = useState("");
+  // const [localMemoImages, setLocalMemoImages] = useState([]);
+  // const { addMemo, saveMemo, bookId } = useContext(MemoContext);
+  const [localMemoText, setLocalMemoText] = useState(memo?.text || "");
+  const [localMemoImages, setLocalMemoImages] = useState(memo?.image || []);
+  const { addMemo, saveMemo, toggleEditMemo, bookId } = useContext(MemoContext);
 
   // アイコンをクリックした時にファイル選択を開く関数
   const handleIconClick = () => {
@@ -38,19 +41,113 @@ export const AddMemoBox = ({ type, memo } ) => {
     setLocalMemoText(event.target.value);
   };
 
-  // メモを追加する処理
-  const handleAddMemo = (memoText, memoImage) => {
-    const newMemo = {
-      text: memoText,
-      image: memoImage,
-    };
-    addMemo(newMemo);
-    setLocalMemoText(""); // テキストエリアをリセット
-    setLocalMemoImages([]); // 画像をリセット
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null; // ファイル入力をリセット
+  // メモを保存する処理 (新規追加 or 編集保存)
+  const handleSaveMemo = async () => {
+    try {
+      // 新規作成の場合は一意のIDを生成、編集時は既存のIDを使用
+      const memoData = {
+        memoText: localMemoText,
+        memoImg: localMemoImages,
+        memoId: memo?.id || Date.now(), // 新規作成時は新しいIDを生成、編集時は既存のIDを使用。memo?.idは、memoというオブジェクトがあればmemoのidを返す、なければundefinedを返すという意味。
+      };
+
+      console.log("保存するメモ:", memoData);
+
+      const url = `http://localhost:3000/books/memos/${bookId}`;
+      const method = memo?.id ? "PUT" : "POST"; // 編集か新規作成かを判定。
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(memoData), // リクエストボディに memoId を含む
+      });
+
+      if (!res.ok) {
+        throw new Error("メモの保存に失敗しました");
+      }
+
+      const updatedMemo = await res.json();
+      console.log("サーバーからの応答:", updatedMemo);
+
+      if (!memo?.id) {
+        // 新しいメモを追加
+        addMemo({
+          text: localMemoText,
+          image: localMemoImages,
+          id: updatedMemo.memo.memoId, // サーバーが返したIDを使用
+        });
+      } else {
+        // 既存メモを更新
+        saveMemo(memo.id, {
+          text: localMemoText,
+          image: localMemoImages,
+        });
+      }
+
+      // フォームのリセット
+      setLocalMemoText("");
+      setLocalMemoImages([]);
+      if (fileInputRef.current) fileInputRef.current.value = null;
+
+      // 編集モード終了
+      if (memo?.id) {
+        console.log(`Ending edit mode for memo with id: ${memo.id}`);
+        toggleEditMemo(memo.id, false);
+      } // 編集モード終了
+      // alert("メモが保存されました！");
+    } catch (error) {
+      console.error("メモ保存エラー:", error);
+      alert("メモの保存に失敗しました。もう一度お試しください。");
     }
   };
+
+  // // メモを追加する処理
+  // const handleAddMemo = async (memoText, memoImage, id) => {
+  //   try {
+  //     // 保存するデータを準備
+  //     const memoData = {
+  //       memoText: memoText,
+  //       memoImg: memoImage.length > 0 ? memoImage : [], // 画像がない場合は空配列
+  //       memoId: id,
+  //     };
+  //     console.log("保存前のデータ:", { bookId, ...memoData });
+
+  //     // サーバーにリクエスト
+  //     const url = `http://localhost:3000/books/memos/${bookId}`;
+  //     const method = "POST";
+
+  //     const res = await fetch(url, {
+  //       method,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(memoData),
+  //     });
+
+  //     if (!res.ok) {
+  //       throw new Error("メモの保存に失敗しました");
+  //     }
+
+  //     const result = await res.json();
+  //     console.log("サーバーからの応答:", result);
+
+  //     // コンテキストに新しいメモを追加
+  //     addMemo({
+  //       text: memoText,
+  //       image: memoImage,
+  //     });
+  //     setLocalMemoText(""); // テキストエリアをリセット
+  //     setLocalMemoImages([]); // 画像をリセット
+  //     if (fileInputRef.current) {
+  //       fileInputRef.current.value = null; // ファイル入力をリセット
+  //     }
+  //   } catch (error) {
+  //     console.error("メモ保存エラー:", error);
+  //     alert("メモの保存に失敗しました。もう一度お試しください。");
+  //   }
+  // };
 
   // 初期化時にmemoの内容をセットする
   useEffect(() => {
@@ -59,11 +156,6 @@ export const AddMemoBox = ({ type, memo } ) => {
       setLocalMemoImages(memo.image || []);
     }
   }, [memo]);
-
-  // 保存処理
-  const handleSaveMemo = (memoText, memoImage) => {
-    saveMemo(memo.id, { text: memoText, image: memoImage });
-  };
 
   return (
     <>
@@ -107,7 +199,7 @@ export const AddMemoBox = ({ type, memo } ) => {
           onChange={handleFileChange}
         />
       </div>
-      <SubmitButton
+      {/* <SubmitButton
         key="submitButtonMemo"
         children={type === "add" ? "メモを追加する" : "保存する"}
         className="mt10 mb60"
@@ -116,6 +208,12 @@ export const AddMemoBox = ({ type, memo } ) => {
             ? () => handleAddMemo(localMemoText, localMemoImages)
             : () => saveMemo(memo.id, { text: localMemoText, image: localMemoImages })
         }
+      /> */}
+      <SubmitButton
+        key="submitButtonMemo"
+        children={type === "add" ? "メモを追加する" : "保存する"}
+        className="mt10 mb60"
+        onClick={handleSaveMemo}
       />
     </>
   );

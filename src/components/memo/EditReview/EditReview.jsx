@@ -6,7 +6,7 @@ import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 
 
 export const EditReview = () => {
-  const { setIsEditingReview, review, setReview, rating, setRating, setDate } =
+  const { setIsEditingReview, review, setReview, rating, setRating, setDate, bookId } =
     useContext(ReviewContext);
   const [localRating, setLocalRating] = useState(rating || 0); // 選択された星評価を管理
   const [hoverRating, setHoverRating] = useState(0); //hoverRatingは、ユーザーがホバーしている星のインデックス（星の番号）を保持
@@ -58,11 +58,50 @@ export const EditReview = () => {
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
   };
 
-  const saveReview = () => {
-    setIsEditingReview(false);//編集モードをオフ
-    setReview(localReview);
-    setRating(localRating);
-    setDate(getCurrentDate());
+  const saveReview = async () => {
+    try {
+      // 保存するデータを準備
+      const reviewData = {
+        reviewText: localReview,
+        rating: localRating,
+        date: new Date().toLocaleDateString(),
+      };
+
+      console.log("保存前のデータ:", { bookId, ...reviewData });
+
+      // サーバーにリクエスト
+      const url = `http://localhost:3000/books/reviews/${bookId}`;
+      const method = review ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewData),
+      });
+
+      if (!res.ok) {
+        throw new Error("レビューの保存に失敗しました");
+      }
+
+      const result = await res.json();
+      console.log("サーバーからの応答:", result);
+
+      if (result && result.review) {
+        // サーバーの応答にレビューが含まれている場合、状態を更新
+        setReview(result.review.reviewText);
+        setRating(result.review.rating || 0);
+        setDate(result.review.date || new Date().toLocaleDateString());
+        setIsEditingReview(false); // 表示モードに切り替え
+      } else {
+        // サーバーの応答が不正な場合
+        throw new Error("保存したレビューが不正です");
+      }
+    } catch (error) {
+      console.error("レビュー保存エラー:", error);
+      alert("レビューの保存に失敗しました。もう一度お試しください。");
+    }
   };
 
   return (

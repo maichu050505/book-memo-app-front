@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
 import "../../../pages/app.scss";
@@ -12,9 +12,43 @@ import { AddMemoBox } from "../../../components/memo/AddMemoBox/AddMemoBox.jsx";
 
 export const Tabs = () => {
   const [selectedTab, setSelectedTab] = useState("myMemo"); // 現在のタブを管理
-  const { isEditingReview } = useContext(ReviewContext);
+  const { isEditingReview, setReview, setRating, setDate, setIsEditingReview, bookId, review, rating } =
+    useContext(ReviewContext);
   const { memos } = useContext(MemoContext);
 
+  useEffect(() => {
+    const initializeReview = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/books/reviews/${bookId}`);
+        const data = await res.json();
+
+        console.log("サーバーから取得したデータ:", data);
+
+        // レビューが存在するか確認
+        if (data && data.bookId === bookId) {
+          // レビューが存在する場合は状態を更新
+          setReview(data.reviewText);
+          setRating(data.rating || 0);
+          setDate(data.date || new Date().toLocaleDateString());
+          setIsEditingReview(false); // 表示モード
+        } else {
+          // レビューが存在しない場合は編集モードに
+          setReview("");
+          setRating(0);
+          setIsEditingReview(true); // 編集モード
+        }
+      } catch (error) {
+        console.error("レビューの取得に失敗しました:", error);
+        setReview("");
+        setRating(0);
+        setIsEditingReview(true); // エラー時は編集モード
+      }
+    };
+
+    if (bookId) {
+      initializeReview();
+    }
+  }, [bookId, setReview, setRating, setDate, setIsEditingReview]);
 
   return (
     <div className="tabs-container">
@@ -43,7 +77,7 @@ export const Tabs = () => {
             <Heading key="h3_memo" type="h3">
               読書メモ<span>※あなたにしか見えません</span>
             </Heading>
-            <AddMemoBox key="addMemoBox" type="add"/>
+            <AddMemoBox key="addMemoBox" type="add" />
 
             {memos.map((memo, index) => (
               <MemoBox key={`memoBox-${index}`} memo={memo} />

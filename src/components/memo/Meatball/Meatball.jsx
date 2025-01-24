@@ -5,26 +5,75 @@ import { StatusContext } from "../../providers/StatusProvider.jsx";
 import styles from "./Meatball.module.scss";
 
 export const Meatball = ({ type, memoId }) => {
-  const { setIsEditingReview, setReview, setRating } = useContext(ReviewContext);
+  const { setIsEditingReview, setReview, setRating, setDate, bookId } = useContext(ReviewContext);
   const { toggleEditMemo, deleteMemo } = useContext(MemoContext);
   const { setWantToRead, setReadingNow, setReaded } = useContext(StatusContext);
   const onEditReview = () => {
     setIsEditingReview(true); // 編集モードにする
   };
 
-  const onDeleteReview = () => {
-    setIsEditingReview(true); // 編集モードにする
-    setReview(""); //初期化
-    setRating(0); //初期化
+  const onDeleteReview = async () => {
+    const isConfirmed = window.confirm("本当に削除して良いですか？");
+    if (isConfirmed) {
+      setReview(""); // 初期化
+      setRating(0); // 初期化
+      setDate(null); // 初期化
+      setIsEditingReview(true); // 編集モードを終了
+      try {
+        const url = `http://localhost:3000/books/reviews/${bookId}`;
+
+        // サーバーにDELETEリクエストを送信
+        const res = await fetch(url, {
+          method: "DELETE",
+        });
+
+        if (!res.ok) {
+          throw new Error("レビューの削除に失敗しました");
+        }
+
+        const result = await res.json();
+        console.log(result.message); // 成功メッセージ
+      } catch (error) {
+        console.error("レビュー削除エラー:", error);
+      }
+    }
   };
+
 
   const onEditMemo = () => {
-    toggleEditMemo(memoId); // 特定のメモを編集モードにする
+    console.log(`Entering edit mode for memo with id: ${memoId}`);
+    toggleEditMemo(memoId, true); // 特定のメモを編集モードにする
   };
 
-  const onDeleteMemo = () => {
-    deleteMemo(memoId); //特定のメモを削除;
+  const onDeleteMemo = async (memoId) => {
+    const isConfirmed = window.confirm("本当に削除して良いですか？");
+    if (isConfirmed) {
+      try {
+        const url = `http://localhost:3000/books/memos/${bookId}/${memoId}`;
+        console.log(`Deleting memo with URL: ${url}`);
+
+        const res = await fetch(url, {
+          method: "DELETE",
+        });
+
+        if (!res.ok) {
+          throw new Error("メモの削除に失敗しました");
+        }
+
+        const data = await res.json();
+        console.log("サーバーからの応答:", data);
+
+        // 状態を更新して削除を反映
+        deleteMemo(memoId);
+        // alert("メモが削除されました！");
+      } catch (error) {
+        console.error("メモ削除エラー:", error);
+        alert("メモの削除に失敗しました。もう一度お試しください。");
+      }
+    }
   };
+
+
 
   const onWantToRead = () => {
     setWantToRead(true);
@@ -57,7 +106,13 @@ export const Meatball = ({ type, memoId }) => {
           </li>
           <li
             className={styles.delete}
-            onClick={type === "editAndDeleteReview" ? onDeleteReview : onDeleteMemo}
+            onClick={() => {
+              if (type === "editAndDeleteReview") {
+                onDeleteReview();
+              } else if (type === "editAndDeleteMemo" && memoId) {
+                onDeleteMemo(memoId); // memoId が存在する場合のみ削除を実行
+              }
+            }}
           >
             削除する
           </li>

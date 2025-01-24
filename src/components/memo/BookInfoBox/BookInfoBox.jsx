@@ -1,89 +1,67 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
+import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 
 export const BookInfoBox = ({
-  buttonLinkTo,
-  buttonColor,
-  buttonChildren,
-  title,
-  author,
-  publisher,
-  publishedDate,
-  coverImageUrl,
-  amazonLink,
-  query
+  book,
+  onAction
 }) => {
-  const navigate = useNavigate();
+  const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
 
-  const addToBookshelf = async () => {
+  const { pathname, search } = useLocation(); // 現在のパスとクエリパラメータを取得
+  const isSinglePage = pathname === "/single" && search.startsWith("?id=");
+
+  // コンポーネント初期化時に本棚の状態を確認
+  const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id);
+
+  const handleAction = async () => {
     try {
-      console.log("本棚に登録するために送信するデータ:", { title }); // リクエスト送信前に確認
-      const res = await fetch(`http://localhost:3000/books/bookshelf`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title }),
-      });
-
-      if (!res.ok) {
-        console.error("本の情報取得に失敗しました");
-        return;
+      //本棚に登録済みの場合は、
+      if (isInBookshelf) {
+        // 本棚から削除
+        const res = await fetch("http://localhost:3000/books/bookshelf", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        if (!res.ok) {
+          throw new Error("本棚からの削除に失敗しました");
+        }
+        setIsInBookshelf(false);
+        //本棚に登録されていない場合は、
+      } else {
+        // 本棚に登録
+        const res = await fetch("http://localhost:3000/books/bookshelf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        if (!res.ok) {
+          throw new Error("本棚への登録に失敗しました");
+        }
+        setIsInBookshelf(true);
+        if (onAction) onAction(true); // 状態変更時のコールバック
       }
-
-      const data = await res.json();
-      const bookData = data.results?.[0];
-
-      if (!bookData) {
-        console.error("該当する本が見つかりませんでした");
-        return;
-      }
-
-      // navigateでbookDataをstateとして渡す
-      console.log("渡すbookData:", bookData); // ここでbookDataを確認
-      navigate(buttonLinkTo, {
-        state: { bookData, query },
-      });
     } catch (error) {
-      console.error("エラーが発生しました: ", error);
+      console.error("エラー:", error);
     }
   };
 
-
-  const getBookInfo = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/books/getBookInfo?title=${encodeURIComponent(title)}`
-      );
-      if (!res.ok) {
-        console.error("本の情報取得に失敗しました");
-        return;
-      }
-      const data = await res.json(); // レスポンス全体を取得
-      const bookData = data.results?.[0]; // 配列の最初の要素を取得
-      if (!bookData) {
-        console.error("該当する本が見つかりませんでした");
-        return;
-      }
-
-      // navigate で state を渡して遷移
-      navigate(buttonLinkTo, {
-        state: { bookData, query: query }, // 渡された searchTerm を使う
-      });
-    } catch (error) {
-      console.error("エラーが発生しました: ", error);
-    }
-  }
   return (
     <div className={styles.bookInfoBox}>
       <div className={styles.cover}>
         <img src={coverImageUrl} alt={title} />
       </div>
       <div className={styles.info}>
-        <Link to="/single" className={styles.bookTitle} onClick={getBookInfo}>
-          {title}
-        </Link>
+        {/* 現在のパスが /single かつクエリパラメータが ?id=数字 の場合はタイトルのみ表示 */}
+        {isSinglePage ? (
+          <p className={styles.bookTitle_noLink}>{title}</p>
+        ) : (
+          <Link to={`/single?id=${id}`} className={styles.bookTitle}>
+            {title}
+          </Link>
+        )}
         <div className={styles.numbers}>
           <p className={styles.registrants}>
             <img src="./img/icon_registrant.svg" alt="" />
@@ -99,12 +77,13 @@ export const BookInfoBox = ({
         </p>
       </div>
       <div>
-        <BookInfoButton
-          linkTo={buttonLinkTo}
-          buttonColor={buttonColor}
-          children={buttonChildren}
-          onClick={addToBookshelf}
-        />
+        <Link
+          to={`/single?id=${id}`}
+          className={`linkButton ${isInBookshelf ? "white_red" : "blue"}`}
+          onClick={handleAction}
+        >
+          {isInBookshelf ? "本棚から削除" : "本棚に登録"}
+        </Link>
         <BookInfoButton linkTo={amazonLink} buttonColor="gray" children="Amazon" />
       </div>
     </div>

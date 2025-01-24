@@ -82,16 +82,11 @@ export const Search = () => {
               {results?.map((result, index) => (
                 <li key={index}>
                   <BookInfoBox
+                    book={result}
+                    id={result.id}
                     buttonLinkTo="/single"
                     buttonColor="blue"
                     buttonChildren="本棚に登録"
-                    title={result.title}
-                    author={result.author}
-                    publisher={result.publisher}
-                    publishedDate={result.publishedDate}
-                    coverImageUrl={result.coverImageUrl}
-                    amazonLink={result.amazonLink}
-                    query={searchTerm} //検索キーワードを渡す
                   />
                 </li>
               ))}

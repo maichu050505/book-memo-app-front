@@ -6,6 +6,7 @@ import styles from "./ReviewBox.module.scss";
 
 export const ReviewBox = () => {
   const { review, rating, date } = useContext(ReviewContext);
+
   // 星を表示する関数（EditReviewと同じロジック）
   const renderStars = () => {
     return [1, 2, 3, 4, 5].map((star) => {
