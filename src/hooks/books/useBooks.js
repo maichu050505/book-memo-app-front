@@ -8,7 +8,7 @@ export const useBook = (id) => {
 
     const fetchData = async () => {
       //fetchを使い、指定したエンドポイントに対してHTTPリクエストを送信。idをクエリパラメータとしてURLに追加。サーバーがレスポンスを返すまで待機。
-      const res = await fetch("http://localhost:3000/books/getBookInfoById?id=" + id);
+      const res = await fetch(`http://localhost:3000/books/getBookInfoById?id=${id}`);
       //サーバーからのレスポンスが200 OK以外の場合はエラーとして扱い、ログを出力。
       if (!res.ok) {
         console.error("本の情報取得に失敗しました");

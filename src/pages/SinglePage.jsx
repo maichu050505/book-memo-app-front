@@ -22,6 +22,7 @@ export const SinglePage = () => {
   // location.searchを元にURLSearchParamsオブジェクトを作成。(key=valueのペアを管理するオブジェクトが作成)
 
   const id = params.get("id"); // params.get("id")は、URLSearchParamsのメソッドの一つで、指定したクエリパラメータのキーidに対応する値、すなわち1などが取得できる。
+  console.log("取得したID:", id);
 
   const { book } = useBook(id);
 

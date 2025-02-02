@@ -1,23 +1,32 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-//本棚の状態を確認
 export const useCheckBookshelf = (id) => {
   const [isInBookshelf, setIsInBookshelf] = useState(false);
+  const prevIdRef = useRef(null); // 前回の id を保存
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || prevIdRef.current === id) return; // id が同じなら処理をスキップ
+
+    prevIdRef.current = id; // 現在の id を保存
 
     const checkBookshelf = async () => {
       try {
-        const res = await fetch("http://localhost:3000/books/bookshelf");
+        console.log("本棚の状態確認リクエストを送信");
+        const res = await fetch("http://localhost:3000/books/bookshelf", {
+          method: "GET",
+        });
         if (!res.ok) {
-          throw new Error("本棚の状態確認に失敗しました");
+          const errorData = await res.json();
+          console.error("サーバーエラー:", errorData.error || "不明なエラー");
+          throw new Error(errorData.error || "本棚の状態確認に失敗しました");
         }
         const bookshelf = await res.json();
-        const isBookInShelf = bookshelf.some((b) => b.id === id);
+        console.log("取得した本棚データ:", bookshelf);
+
+        const isBookInShelf = bookshelf.some((b) => b.bookId === id);
         setIsInBookshelf(isBookInShelf);
       } catch (error) {
-        console.error("エラー:", error);
+        console.error("エラー:", error.message);
       }
     };
 

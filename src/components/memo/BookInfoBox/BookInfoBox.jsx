@@ -1,12 +1,10 @@
+import { memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 
-export const BookInfoBox = ({
-  book,
-  onAction
-}) => {
+const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
 
   const { pathname, search } = useLocation(); // 現在のパスとクエリパラメータを取得
@@ -89,3 +87,6 @@ export const BookInfoBox = ({
     </div>
   );
 };
+
+// React.memo を適用したものを別の変数に代入
+export const BookInfoBox = memo(BookInfoBoxComponent);

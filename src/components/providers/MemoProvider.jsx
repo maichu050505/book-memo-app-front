@@ -89,7 +89,7 @@ export const MemoProvider = ({ children, bookId }) => {
   useEffect(() => {
     const fetchMemos = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/memos/${bookId}`);
+        const res = await fetch(`http://localhost:3000/memos/${bookId}`);
         if (!res.ok) {
           throw new Error("メモの取得に失敗しました");
         }

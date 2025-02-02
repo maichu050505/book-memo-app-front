@@ -53,7 +53,7 @@ export const AddMemoBox = ({ type, memo } ) => {
 
       console.log("保存するメモ:", memoData);
 
-      const url = `http://localhost:3000/books/memos/${bookId}`;
+      const url = `http://localhost:3000/memos/${bookId}`;
       const method = memo?.id ? "PUT" : "POST"; // 編集か新規作成かを判定。
 
       const res = await fetch(url, {
@@ -102,52 +102,6 @@ export const AddMemoBox = ({ type, memo } ) => {
       alert("メモの保存に失敗しました。もう一度お試しください。");
     }
   };
-
-  // // メモを追加する処理
-  // const handleAddMemo = async (memoText, memoImage, id) => {
-  //   try {
-  //     // 保存するデータを準備
-  //     const memoData = {
-  //       memoText: memoText,
-  //       memoImg: memoImage.length > 0 ? memoImage : [], // 画像がない場合は空配列
-  //       memoId: id,
-  //     };
-  //     console.log("保存前のデータ:", { bookId, ...memoData });
-
-  //     // サーバーにリクエスト
-  //     const url = `http://localhost:3000/books/memos/${bookId}`;
-  //     const method = "POST";
-
-  //     const res = await fetch(url, {
-  //       method,
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(memoData),
-  //     });
-
-  //     if (!res.ok) {
-  //       throw new Error("メモの保存に失敗しました");
-  //     }
-
-  //     const result = await res.json();
-  //     console.log("サーバーからの応答:", result);
-
-  //     // コンテキストに新しいメモを追加
-  //     addMemo({
-  //       text: memoText,
-  //       image: memoImage,
-  //     });
-  //     setLocalMemoText(""); // テキストエリアをリセット
-  //     setLocalMemoImages([]); // 画像をリセット
-  //     if (fileInputRef.current) {
-  //       fileInputRef.current.value = null; // ファイル入力をリセット
-  //     }
-  //   } catch (error) {
-  //     console.error("メモ保存エラー:", error);
-  //     alert("メモの保存に失敗しました。もう一度お試しください。");
-  //   }
-  // };
 
   // 初期化時にmemoの内容をセットする
   useEffect(() => {

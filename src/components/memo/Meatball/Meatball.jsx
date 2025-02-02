@@ -49,7 +49,7 @@ export const Meatball = ({ type, memoId }) => {
     const isConfirmed = window.confirm("本当に削除して良いですか？");
     if (isConfirmed) {
       try {
-        const url = `http://localhost:3000/books/memos/${bookId}/${memoId}`;
+        const url = `http://localhost:3000/memos/${bookId}/${memoId}`;
         console.log(`Deleting memo with URL: ${url}`);
 
         const res = await fetch(url, {
