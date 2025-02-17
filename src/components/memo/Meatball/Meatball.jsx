@@ -41,15 +41,28 @@ export const Meatball = ({ type, memoId }) => {
 
 
   const onEditMemo = () => {
-    console.log(`Entering edit mode for memo with id: ${memoId}`);
-    toggleEditMemo(memoId, true); // 特定のメモを編集モードにする
+    console.log("受け取った memoId:", memoId);  
+    if (!memoId) {
+      console.error("メモのIDが undefined です。編集モードにできません。");
+      return;
+    }
+    console.log(`Editing memo with id: ${memoId}`);
+    toggleEditMemo(Number(memoId), true);
   };
 
   const onDeleteMemo = async (memoId) => {
+    if (!memoId) {
+      console.error("削除対象のメモIDが undefined です。");
+      return;
+    }
+
+    memoId = Number(memoId); // IDを数値に変換
+    console.log(`Trying to delete memo with id: ${memoId}`); // デバッグログを追加
+
     const isConfirmed = window.confirm("本当に削除して良いですか？");
     if (isConfirmed) {
       try {
-        const url = `http://localhost:3000/memos/${bookId}/${memoId}`;
+        const url = `http://localhost:3000/memos/${memoId}`;
         console.log(`Deleting memo with URL: ${url}`);
 
         const res = await fetch(url, {
@@ -110,7 +123,7 @@ export const Meatball = ({ type, memoId }) => {
               if (type === "editAndDeleteReview") {
                 onDeleteReview();
               } else if (type === "editAndDeleteMemo" && memoId) {
-                onDeleteMemo(memoId); // memoId が存在する場合のみ削除を実行
+                onDeleteMemo(Number(memoId)); // memoId が存在する場合のみ削除を実行
               }
             }}
           >

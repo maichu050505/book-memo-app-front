@@ -77,8 +77,9 @@ export const Tabs = () => {
             <Heading key="h3_memo" type="h3">
               読書メモ<span>※あなたにしか見えません</span>
             </Heading>
+            {/* 新規メモの入力ボックスは常に表示 */}
             <AddMemoBox key="addMemoBox" type="add" />
-
+            {/* 既存のメモをリスト表示。編集モード制御は MemoBox 側で行う */}
             {memos.map((memo, index) => (
               <MemoBox key={`memoBox-${index}`} memo={memo} />
             ))}
