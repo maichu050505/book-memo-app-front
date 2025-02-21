@@ -9,11 +9,18 @@ import { Heading } from "../../../components/common/Heading/Heading.jsx";
 import { Status } from "../Status/Status.jsx";
 import { AddMemoBox } from "../../../components/memo/AddMemoBox/AddMemoBox.jsx";
 
-
 export const Tabs = () => {
   const [selectedTab, setSelectedTab] = useState("myMemo"); // 現在のタブを管理
-  const { isEditingReview, setReview, setRating, setDate, setIsEditingReview, bookId, review, rating } =
-    useContext(ReviewContext);
+  const {
+    isEditingReview,
+    setReview,
+    setRating,
+    setDate,
+    setIsEditingReview,
+    bookId,
+    review,
+    rating,
+  } = useContext(ReviewContext);
   const { memos } = useContext(MemoContext);
 
   useEffect(() => {
@@ -80,8 +87,8 @@ export const Tabs = () => {
             {/* 新規メモの入力ボックスは常に表示 */}
             <AddMemoBox key="addMemoBox" type="add" />
             {/* 既存のメモをリスト表示。編集モード制御は MemoBox 側で行う */}
-            {memos.map((memo, index) => (
-              <MemoBox key={`memoBox-${index}`} memo={memo} />
+            {memos.map((memo) => (
+              <MemoBox key={memo.id} memo={memo} />
             ))}
             <Heading key="h3_status" type="h3" children="読書状況" />
             <Status key="status" />
