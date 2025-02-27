@@ -38,7 +38,7 @@ export const SinglePage = () => {
         <Heading key="pageTitle" type="h2" children="本の詳細" />
         <BookInfoBox key="bookInfoBox" book={book} buttonLinkTo="/dashboard" />
 
-        <StatusProvider>
+        <StatusProvider initialBookId={Number(id)}>
           <ReviewProvider bookId={id}>
             <MemoProvider bookId={id}>
               <Tabs key="tabs" />

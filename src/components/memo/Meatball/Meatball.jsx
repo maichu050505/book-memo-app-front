@@ -11,6 +11,7 @@ export const Meatball = ({ type, memoId }) => {
   const onEditReview = () => {
     setIsEditingReview(true); // 編集モードにする
   };
+  const { changeStatus } = useContext(StatusContext);
 
   const onDeleteReview = async () => {
     const isConfirmed = window.confirm("本当に削除して良いですか？");
@@ -39,9 +40,8 @@ export const Meatball = ({ type, memoId }) => {
     }
   };
 
-
   const onEditMemo = () => {
-    console.log("受け取った memoId:", memoId);  
+    console.log("受け取った memoId:", memoId);
     if (!memoId) {
       console.error("メモのIDが undefined です。編集モードにできません。");
       return;
@@ -86,25 +86,47 @@ export const Meatball = ({ type, memoId }) => {
     }
   };
 
-
-
-  const onWantToRead = () => {
-    setWantToRead(true);
-    setReadingNow(false);
-    setReaded(false);
-  }
-
-  const onReadingNow = () => {
-    setWantToRead(false);
-    setReadingNow(true);
-    setReaded(false);
+  const onWantToRead = async () => {
+    try {
+      await changeStatus("WANT_TO_READ");
+    } catch (error) {
+      console.error("更新失敗:", error);
+    }
   };
 
-  const onReaded = () => {
-    setWantToRead(false);
-    setReadingNow(false);
-    setReaded(true);
+  const onReadingNow = async () => {
+    try {
+      await changeStatus("READING_NOW");
+    } catch (error) {
+      console.error("更新失敗:", error);
+    }
   };
+
+  const onReaded = async () => {
+    try {
+      await changeStatus("READ");
+    } catch (error) {
+      console.error("更新失敗:", error);
+    }
+  };
+
+  // const onWantToRead = () => {
+  //   setWantToRead(true);
+  //   setReadingNow(false);
+  //   setReaded(false);
+  // };
+
+  // const onReadingNow = () => {
+  //   setWantToRead(false);
+  //   setReadingNow(true);
+  //   setReaded(false);
+  // };
+
+  // const onReaded = () => {
+  //   setWantToRead(false);
+  //   setReadingNow(false);
+  //   setReaded(true);
+  // };
 
   // ドロップダウンメニューの内容を生成する関数
   const renderMenuItems = () => {

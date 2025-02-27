@@ -16,7 +16,7 @@ export const Status = () => {
   }
 
   return (
-    <div className={styles.status}>
+    <div className={`${styles.status} mb60`}>
       <Meatball type="editStatus" />
       <p>{statusText}</p>
     </div>

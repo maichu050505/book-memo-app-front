@@ -79,6 +79,8 @@ export const Tabs = () => {
       <div className="tab-content-container">
         {selectedTab === "myMemo" && (
           <div className="tab-content">
+            <Heading key="h3_status" type="h3" children="読書状況" />
+            <Status key="status" />
             <Heading key="h3_review" type="h3" children="評価と感想" />
             {isEditingReview ? <EditReview key="editReview" /> : <ReviewBox key="reviewBox" />}
             <Heading key="h3_memo" type="h3">
@@ -90,8 +92,6 @@ export const Tabs = () => {
             {memos.map((memo) => (
               <MemoBox key={memo.id} memo={memo} />
             ))}
-            <Heading key="h3_status" type="h3" children="読書状況" />
-            <Status key="status" />
           </div>
         )}
         {selectedTab === "others" && (
