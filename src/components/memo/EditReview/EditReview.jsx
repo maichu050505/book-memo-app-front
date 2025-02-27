@@ -4,14 +4,12 @@ import "../../../pages/app.scss";
 import styles from "./EditReview.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 
-
 export const EditReview = () => {
   const { setIsEditingReview, review, setReview, rating, setRating, setDate, bookId } =
     useContext(ReviewContext);
   const [localRating, setLocalRating] = useState(rating || 0); // 選択された星評価を管理
   const [hoverRating, setHoverRating] = useState(0); //hoverRatingは、ユーザーがホバーしている星のインデックス（星の番号）を保持
   const [localReview, setLocalReview] = useState(review || ""); // レビューのテキスト状態を管理
-  
 
   // 星を表示する関数
   const renderStars = () => {
@@ -71,7 +69,7 @@ export const EditReview = () => {
 
       // サーバーにリクエスト
       const url = `http://localhost:3000/books/reviews/${bookId}`;
-      const method = review ? "PUT" : "POST";
+      const method = "POST"; // 既存レビューがある場合でもPOSTを利用する
 
       const res = await fetch(url, {
         method,
