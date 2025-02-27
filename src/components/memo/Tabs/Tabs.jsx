@@ -32,7 +32,7 @@ export const Tabs = () => {
         console.log("サーバーから取得したデータ:", data);
 
         // レビューが存在するか確認
-        if (data && data.bookId === bookId) {
+        if (data && data.bookId === Number(bookId)) {
           // レビューが存在する場合は状態を更新
           setReview(data.reviewText);
           setRating(data.rating || 0);

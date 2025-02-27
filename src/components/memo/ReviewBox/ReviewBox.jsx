@@ -21,6 +21,23 @@ export const ReviewBox = () => {
     });
   };
 
+  // ユーザーのタイムゾーンに合わせて日付をフォーマットする関数
+  const formatDateLocal = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    const year = d.getFullYear();
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const hours = d.getHours().toString().padStart(2, "0");
+    const minutes = d.getMinutes().toString().padStart(2, "0");
+    return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+  };
+
+  // GET の結果がセットされる前はローディング状態にする
+  if (!date && review === "") {
+    return <div>レビューを読み込み中…</div>;
+  }
+
   return (
     <div className={`${styles.reviewBox} mb60`}>
       <Meatball type="editAndDeleteReview" />
@@ -30,7 +47,7 @@ export const ReviewBox = () => {
         </div>
         <div className={styles.info_txt}>
           <p className={styles.userName}>MaiW さん</p>
-          <p className={styles.date}>{date}</p>
+          <p className={styles.date}>{formatDateLocal(date)}</p>
         </div>
       </div>
       <div className="starsCurrent mb10">{renderStars()}</div>

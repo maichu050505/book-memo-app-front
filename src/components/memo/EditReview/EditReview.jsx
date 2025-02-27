@@ -58,18 +58,16 @@ export const EditReview = () => {
 
   const saveReview = async () => {
     try {
-      // 保存するデータを準備
       const reviewData = {
-        reviewText: localReview,
-        rating: localRating,
-        date: new Date().toLocaleDateString(),
+        reviewText: localReview, // ユーザーが入力した内容
+        rating: localRating, // ユーザーが選択した評価
+        date: new Date().toISOString(), // 現在時刻（ISO形式）
       };
 
       console.log("保存前のデータ:", { bookId, ...reviewData });
 
-      // サーバーにリクエスト
       const url = `http://localhost:3000/books/reviews/${bookId}`;
-      const method = "POST"; // 既存レビューがある場合でもPOSTを利用する
+      const method = "POST";
 
       const res = await fetch(url, {
         method,
@@ -87,13 +85,11 @@ export const EditReview = () => {
       console.log("サーバーからの応答:", result);
 
       if (result && result.review) {
-        // サーバーの応答にレビューが含まれている場合、状態を更新
         setReview(result.review.reviewText);
         setRating(result.review.rating || 0);
         setDate(result.review.date || new Date().toLocaleDateString());
-        setIsEditingReview(false); // 表示モードに切り替え
+        setIsEditingReview(false);
       } else {
-        // サーバーの応答が不正な場合
         throw new Error("保存したレビューが不正です");
       }
     } catch (error) {

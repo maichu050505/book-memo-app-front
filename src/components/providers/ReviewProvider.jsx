@@ -2,7 +2,7 @@ import { createContext, useState, useEffect, useRef } from "react";
 
 export const ReviewContext = createContext({});
 
-export const ReviewProvider = ({children, bookId}) => {
+export const ReviewProvider = ({ children, bookId }) => {
   //編集モード切り替え
   const [isEditingReview, setIsEditingReview] = useState(true);
   const [review, setReview] = useState("");
@@ -12,11 +12,6 @@ export const ReviewProvider = ({children, bookId}) => {
 
   // サーバーからレビューを取得して初期化
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false; // 初回レンダリングをスキップ
-      return;
-    }
-
     const fetchReview = async () => {
       try {
         const res = await fetch(`http://localhost:3000/books/reviews/${bookId}`);
