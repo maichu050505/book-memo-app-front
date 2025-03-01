@@ -7,6 +7,7 @@ import { SigninPage } from "./pages/SigninPage";
 import { Dashboard } from "./pages/Dashboard";
 import { Search } from "./pages/Search";
 import { SinglePage } from "./pages/SinglePage";
+import { AuthProvider } from "./components/providers/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
