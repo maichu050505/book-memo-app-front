@@ -14,12 +14,9 @@ export const useCheckBookshelf = (bookId, userId) => {
       try {
         console.log("本棚の状態確認リクエストを送信");
         // クエリパラメーターに userId と filter (ここは "all" など固定でOK) を渡す
-        const res = await fetch(
-          `http://localhost:3000/books/bookshelf?userId=${userId}&filter=all`,
-          {
-            method: "GET",
-          }
-        );
+        const res = await fetch(`http://localhost:3000/users/${userId}/bookshelf?filter=all`, {
+          method: "GET",
+        });
         if (!res.ok) {
           const errorData = await res.json();
           console.error("サーバーエラー:", errorData.error || "不明なエラー");

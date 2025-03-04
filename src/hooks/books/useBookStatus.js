@@ -18,7 +18,7 @@ export const useBookStatus = (bookId) => {
           throw new Error("トークンが存在しません");
         }
         const response = await fetchWithAuth(
-          `http://localhost:3000/users/${user.id}/books/${bookId}/status`
+          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/status`
         );
         if (!response.ok) {
           const data = await response.json();

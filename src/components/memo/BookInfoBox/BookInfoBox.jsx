@@ -18,13 +18,16 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
 
   const handleAction = async () => {
     try {
+      const token = localStorage.getItem("token"); // トークンを取得
       //本棚に登録済みの場合は、
       if (isInBookshelf) {
         // 本棚から削除
-        const res = await fetch("http://localhost:3000/books/bookshelf", {
+        const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf/${id}`, {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, userId: user.id }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (!res.ok) {
           throw new Error("本棚からの削除に失敗しました");
@@ -34,10 +37,13 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
         //本棚に登録されていない場合は、
       } else {
         // 本棚に登録
-        const res = await fetch("http://localhost:3000/books/bookshelf", {
+        const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id, userId: user.id }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ bookId: id }),
         });
         if (!res.ok) {
           throw new Error("本棚への登録に失敗しました");
