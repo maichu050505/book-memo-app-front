@@ -1,11 +1,25 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../../pages/app.css";
 import styles from "./DropdownMenu.module.scss";
 
 export const DropdownMenu = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    // トークンを削除
+    localStorage.removeItem("token");
+    // AuthContext のユーザー情報をクリア
+    if (setUser) {
+      setUser(null);
+    }
+    // ログアウト後、トップページまたはログインページにリダイレクト
+    navigate("/login");
+  };
+
   return (
     <div className={styles.dropdown}>
       <Link className={styles.dropdownButton} to="/dashboard">
@@ -15,7 +29,9 @@ export const DropdownMenu = () => {
 
       <div className={styles.dropdown_content}>
         <Link to="/dashboard">本棚</Link>
-        <Link to="/">ログアウト</Link>
+        <Link to="/" onClick={handleLogout}>
+          ログアウト
+        </Link>
       </div>
     </div>
   );
