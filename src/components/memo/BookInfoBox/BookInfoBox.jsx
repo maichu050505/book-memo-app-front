@@ -1,17 +1,20 @@
-import { memo } from "react";
+import { memo, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
+import { AuthContext } from "../../providers/AuthProvider.jsx";
 
 const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
-
   const { pathname, search } = useLocation(); // 現在のパスとクエリパラメータを取得
   const isSinglePage = pathname === "/single" && search.startsWith("?id=");
 
-  // コンポーネント初期化時に本棚の状態を確認
-  const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id);
+  // AuthContext からユーザー情報を取得
+  const { user } = useContext(AuthContext);
+
+  // user が存在する場合に、book.id と user.id を渡す
+  const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id, user ? user.id : null);
 
   const handleAction = async () => {
     try {
@@ -21,24 +24,26 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
         const res = await fetch("http://localhost:3000/books/bookshelf", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ id, userId: user.id }),
         });
         if (!res.ok) {
           throw new Error("本棚からの削除に失敗しました");
         }
         setIsInBookshelf(false);
+        window.alert("本棚から削除しました");
         //本棚に登録されていない場合は、
       } else {
         // 本棚に登録
         const res = await fetch("http://localhost:3000/books/bookshelf", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id }),
+          body: JSON.stringify({ id, userId: user.id }),
         });
         if (!res.ok) {
           throw new Error("本棚への登録に失敗しました");
         }
         setIsInBookshelf(true);
+        window.alert("本棚に登録しました");
         if (onAction) onAction(true); // 状態変更時のコールバック
       }
     } catch (error) {
@@ -78,7 +83,10 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
         <Link
           to={`/single?id=${id}`}
           className={`linkButton ${isInBookshelf ? "white_red" : "blue"}`}
-          onClick={handleAction}
+          onClick={(e) => {
+            e.preventDefault(); // リンクのデフォルトの挙動を防ぐ
+            handleAction(); // e は渡さない
+          }}
         >
           {isInBookshelf ? "本棚から削除" : "本棚に登録"}
         </Link>

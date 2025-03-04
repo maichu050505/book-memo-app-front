@@ -1,3 +1,4 @@
+// 指定した id の本の詳細情報を取得するフック
 import { useEffect, useState } from "react";
 
 export const useBook = (id) => {
@@ -23,9 +24,9 @@ export const useBook = (id) => {
     fetchData();
   }, [id]);
 
-    //フックの戻り値としてbookを返却。呼び出し元では、このbookを利用して本の情報を表示。
-    //{book.title}、{book.author}などで使える。
+  //フックの戻り値としてbookを返却。呼び出し元では、このbookを利用して本の情報を表示。
+  //{book.title}、{book.author}などで使える。
   return {
     book,
   };
-}
+};

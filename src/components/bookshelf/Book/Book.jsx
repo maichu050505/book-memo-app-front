@@ -1,11 +1,16 @@
 import { Link } from "react-router-dom";
 import styles from "./Book.module.scss";
 
-export const Book = () => {
+export const Book = ({ book }) => {
+  if (!book) {
+    // book が渡されない場合は何もレンダリングしない
+    return null;
+  }
+
   return (
-    <Link to="/single" className={styles.bookBox}>
+    <Link to={`/single?id=${book.id}`} className={styles.bookBox}>
       <div className={styles.coverArea}>
-        <img src="/img/cover1.jpg" alt="" />
+        <img src={book.coverImageUrl} alt="" />
       </div>
       <div className={styles.iconArea}>
         <p className={styles.stars}>

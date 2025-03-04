@@ -6,7 +6,6 @@ import { DropdownMenu } from "../components/common/DropdownMenu/DropdownMenu.jsx
 import { Main } from "../components/common/Main/Main.jsx";
 import { Bookshelf } from "../components/bookshelf/Bookshelf/Bookshelf.jsx";
 
-
 export const Dashboard = () => {
   const [selectedTab, setSelectedTab] = useState("all"); // 現在のタブを管理
 
@@ -42,11 +41,8 @@ export const Dashboard = () => {
           </button>
         </div>
 
-        {/* タブの内容 */}
-        {selectedTab === "all" && <Bookshelf key="bookshelfAll" />}
-        {selectedTab === "want" && <Bookshelf key="bookshelfWant" />}
-        {selectedTab === "now" && <Bookshelf key="bookshelfNow" />}
-        {selectedTab === "done" && <Bookshelf key="bookshelfDone" />}
+        {/* タブに応じたフィルターを渡す */}
+        <Bookshelf key={selectedTab} filter={selectedTab} />
       </Main>
     </>
   );
