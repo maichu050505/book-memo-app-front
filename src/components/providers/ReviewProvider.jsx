@@ -1,8 +1,10 @@
-import { createContext, useState, useEffect, useRef } from "react";
+import { createContext, useState, useEffect, useRef, useContext } from "react";
+import { AuthContext } from "./AuthProvider";
 
 export const ReviewContext = createContext({});
 
 export const ReviewProvider = ({ children, bookId }) => {
+  const { user } = useContext(AuthContext); // ユーザー情報を取得
   //編集モード切り替え
   const [isEditingReview, setIsEditingReview] = useState(true);
   const [review, setReview] = useState("");
@@ -14,7 +16,22 @@ export const ReviewProvider = ({ children, bookId }) => {
   useEffect(() => {
     const fetchReview = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/reviews/${bookId}`);
+        const token = localStorage.getItem("token");
+        // ユーザーが定義されていなければ何もしない
+        if (!user) {
+          console.error("ユーザー情報がありません");
+          return;
+        }
+        const res = await fetch(
+          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!res.ok) {
           throw new Error("レビューの取得に失敗しました");
         }
@@ -30,10 +47,10 @@ export const ReviewProvider = ({ children, bookId }) => {
       }
     };
 
-    if (bookId) {
+    if (bookId && user) {
       fetchReview();
     }
-  }, [bookId]);
+  }, [bookId, user]);
 
   return (
     <ReviewContext.Provider

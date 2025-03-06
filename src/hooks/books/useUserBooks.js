@@ -1,4 +1,4 @@
-// ユーザーの本棚に登録されている複数の本リストを取得するためのフック
+// ユーザーの本棚に登録されている全ての本リストを取得するためのフック
 import { useEffect, useState } from "react";
 
 export const useUserBooks = (userId, filter = "all") => {
@@ -13,8 +13,17 @@ export const useUserBooks = (userId, filter = "all") => {
       setLoading(true);
       setError("");
       try {
+        // token を localStorage から取得
+        const token = localStorage.getItem("token");
         const response = await fetch(
-          `http://localhost:3000/books/bookshelf?userId=${userId}&filter=${filter}`
+          `http://localhost:3000/users/${userId}/bookshelf?filter=${filter}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("本棚のデータ取得に失敗しました");

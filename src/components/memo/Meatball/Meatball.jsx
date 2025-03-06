@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { StatusContext } from "../../providers/StatusProvider.jsx";
+import { AuthContext } from "../../providers/AuthProvider.jsx";
 import styles from "./Meatball.module.scss";
 
 export const Meatball = ({ type, memoId }) => {
+  const { user } = useContext(AuthContext);
   const { setIsEditingReview, setReview, setRating, setDate, bookId } = useContext(ReviewContext);
   const { toggleEditMemo, deleteMemo } = useContext(MemoContext);
   const { setWantToRead, setReadingNow, setReaded } = useContext(StatusContext);
@@ -21,11 +23,16 @@ export const Meatball = ({ type, memoId }) => {
       setDate(null); // 初期化
       setIsEditingReview(true); // 編集モードを終了
       try {
-        const url = `http://localhost:3000/books/reviews/${bookId}`;
+        const token = localStorage.getItem("token");
+        const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`;
 
         // サーバーにDELETEリクエストを送信
         const res = await fetch(url, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) {
@@ -62,11 +69,16 @@ export const Meatball = ({ type, memoId }) => {
     const isConfirmed = window.confirm("本当に削除して良いですか？");
     if (isConfirmed) {
       try {
-        const url = `http://localhost:3000/memos/${memoId}`;
+        const token = localStorage.getItem("token");
+        const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos/${memoId}`;
         console.log(`Deleting memo with URL: ${url}`);
 
         const res = await fetch(url, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
 
         if (!res.ok) {

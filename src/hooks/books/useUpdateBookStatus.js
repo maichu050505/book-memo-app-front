@@ -14,7 +14,7 @@ export const useUpdateBookStatus = (bookId) => {
     try {
       const token = localStorage.getItem("token");
       const response = await fetchWithAuth(
-        `http://localhost:3000/users/${user.id}/bookshlef/${bookId}/status`,
+        `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/status`,
         {
           method: "PUT",
           headers: {

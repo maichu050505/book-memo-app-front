@@ -1,5 +1,6 @@
 import { useRef, useState, useContext, useEffect } from "react";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
+import { AuthContext } from "../../providers/AuthProvider";
 import styles from "./AddMemoBox.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 
@@ -11,6 +12,7 @@ export const AddMemoBox = ({ type, memo }) => {
     memo?.image && memo.image.length > 0 ? memo.image : []
   );
   const { addMemo, saveMemo, toggleEditMemo, bookId } = useContext(MemoContext);
+  const { user } = useContext(AuthContext);
   const [deletedImages, setDeletedImages] = useState([]); // 削除された画像を記録
 
   // アイコンをクリックした時にファイル選択を開く関数
@@ -62,20 +64,33 @@ export const AddMemoBox = ({ type, memo }) => {
       }
 
       const isEditing = memo?.id !== undefined;
-      const url = isEditing
-        ? `http://localhost:3000/memos/${memo.id}`
-        : `http://localhost:3000/memos/${bookId}`;
-      const method = isEditing ? "PUT" : "POST";
+      let url, method;
+      if (isEditing) {
+        // 更新の場合：PUT /users/:userId/bookshelf/:bookId/memos/:memoId
+        url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos/${memo.id}`;
+        method = "PUT";
+      } else {
+        // 新規作成の場合：POST /users/:user.id/bookshelf/:bookId/memos
+        url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos`;
+        method = "POST";
+      }
 
-      // **削除した画像を送信**
+      // 送信するフォームデータに、削除した画像があれば追加
       if (isEditing && deletedImages.length > 0) {
         deletedImages.forEach((img) => {
           formData.append("deletedImages", img);
         });
       }
 
+      // トークンを取得
+      const token = localStorage.getItem("token");
+
       const res = await fetch(url, {
         method,
+        // FormData を送る場合、"Content-Type" は自動設定されるので追加しない
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 

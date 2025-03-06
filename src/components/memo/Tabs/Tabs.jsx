@@ -8,8 +8,10 @@ import { MemoBox } from "../../../components/memo/MemoBox/MemoBox.jsx";
 import { Heading } from "../../../components/common/Heading/Heading.jsx";
 import { Status } from "../Status/Status.jsx";
 import { AddMemoBox } from "../../../components/memo/AddMemoBox/AddMemoBox.jsx";
+import { AuthContext } from "../../providers/AuthProvider";
 
 export const Tabs = () => {
+  const { user } = useContext(AuthContext);
   const [selectedTab, setSelectedTab] = useState("myMemo"); // 現在のタブを管理
   const {
     isEditingReview,
@@ -26,10 +28,27 @@ export const Tabs = () => {
   useEffect(() => {
     const initializeReview = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/reviews/${bookId}`);
+        const token = localStorage.getItem("token");
+        if (!user) {
+          console.error("ユーザー情報がありません");
+          return;
+        }
+        const res = await fetch(
+          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (!res.ok) {
+          throw new Error("レビューの取得に失敗しました");
+        }
         const data = await res.json();
 
-        console.log("サーバーから取得したデータ:", data);
+        console.log("取得したレビュー:", data);
 
         // レビューが存在するか確認
         if (data && data.bookId === Number(bookId)) {
@@ -55,7 +74,7 @@ export const Tabs = () => {
     if (bookId) {
       initializeReview();
     }
-  }, [bookId, setReview, setRating, setDate, setIsEditingReview]);
+  }, [bookId, setReview, setRating, setDate, setIsEditingReview, user]);
 
   return (
     <div className="tabs-container">

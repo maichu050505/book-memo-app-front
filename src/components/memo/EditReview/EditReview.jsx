@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
+import { AuthContext } from "../../providers/AuthProvider.jsx";
 import "../../../pages/app.scss";
 import styles from "./EditReview.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
@@ -7,6 +8,7 @@ import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 export const EditReview = () => {
   const { setIsEditingReview, review, setReview, rating, setRating, setDate, bookId } =
     useContext(ReviewContext);
+  const { user } = useContext(AuthContext);
   const [localRating, setLocalRating] = useState(rating || 0); // 選択された星評価を管理
   const [hoverRating, setHoverRating] = useState(0); //hoverRatingは、ユーザーがホバーしている星のインデックス（星の番号）を保持
   const [localReview, setLocalReview] = useState(review || ""); // レビューのテキスト状態を管理
@@ -66,13 +68,17 @@ export const EditReview = () => {
 
       console.log("保存前のデータ:", { bookId, ...reviewData });
 
-      const url = `http://localhost:3000/books/reviews/${bookId}`;
-      const method = "POST";
+      if (!user) {
+        throw new Error("ユーザー情報がありません");
+      }
+      const token = localStorage.getItem("token");
 
+      const url = `http://localhost:3000//users/${user.id}/bookshelf/${bookId}/reviews`;
       const res = await fetch(url, {
-        method,
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(reviewData),
       });

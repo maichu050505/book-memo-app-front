@@ -1,4 +1,5 @@
-import React, { createContext, useReducer, useEffect } from "react";
+import React, { createContext, useReducer, useEffect, useContext } from "react";
+import { AuthContext } from "./AuthProvider";
 
 // メモの初期状態
 const initialMemoState = {
@@ -54,6 +55,7 @@ export const MemoContext = createContext();
 
 // Context Providerコンポーネント
 export const MemoProvider = ({ children, bookId }) => {
+  const { user } = useContext(AuthContext);
   const [state, dispatch] = useReducer(memoReducer, initialMemoState);
 
   // メモを追加する関数
@@ -85,14 +87,15 @@ export const MemoProvider = ({ children, bookId }) => {
   // メモ取得関数
   const fetchMemos = async () => {
     try {
-      if (!bookId) {
-        console.warn("⚠ bookId が未設定のため、メモ取得をスキップ");
-        return;
-      }
-
-      console.log(`メモ取得リクエスト: http://localhost:3000/memos/${Number(bookId)}`);
-
-      const res = await fetch(`http://localhost:3000/memos/${Number(bookId)}`);
+      if (!user || !bookId) return;
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!res.ok) {
         throw new Error(`メモの取得に失敗しました (HTTP ${res.status})`);
       }
@@ -127,8 +130,6 @@ export const MemoProvider = ({ children, bookId }) => {
       console.error("メモ取得エラー:", error);
     }
   };
-
-
 
   // `useEffect` でメモを取得
   useEffect(() => {
