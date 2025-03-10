@@ -41,12 +41,12 @@ export const SigninPage = () => {
 
           <form key="form" onSubmit={handleSubmit}>
             <div>
-              <Heading type="h3" children="ニックネーム" />
+              <Heading type="h3" children="ユーザーネーム" />
               <Input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="ニックネーム"
+                placeholder=""
               />
             </div>
             <div>
@@ -55,7 +55,7 @@ export const SigninPage = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="パスワード"
+                placeholder=""
               />
             </div>
             <div>
@@ -64,7 +64,7 @@ export const SigninPage = () => {
                 type="password"
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
-                placeholder="パスワード（確認用）"
+                placeholder=""
               />
             </div>
             <div>

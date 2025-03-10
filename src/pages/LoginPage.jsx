@@ -49,20 +49,20 @@ export const LoginPage = () => {
       <Main width="648">
         <BackButton key="backButton" />
         <Heading key="pageTitle" type="h2" children="ログイン" />
-        <Heading key="h3_email" type="h3" children="ニックネーム" />
+        <Heading key="h3_email" type="h3" children="ユーザーネーム" />
         <Input
-          label="ニックネーム"
+          label="ユーザーネーム"
           type="text"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          placeholder="ニックネーム"
+          placeholder=""
         />
         <Heading key="h3_password" type="h3" children="パスワード" />
         <Input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="パスワード"
+          placeholder=""
         />
         <SubmitButton type="submit" onClick={handleSubmit} className="blue" children="ログイン" />
         {error && <p style={{ color: "red" }}>{error}</p>}
