@@ -16,6 +16,13 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   // user が存在する場合に、book.id と user.id を渡す
   const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id, user ? user.id : null);
 
+  // 日付を日本語形式に変換する
+  const formattedDate = new Date(publishedDate).toLocaleDateString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   const handleAction = async () => {
     try {
       const token = localStorage.getItem("token"); // トークンを取得
@@ -82,7 +89,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
           </p>
         </div>
         <p className={styles.subInfo}>
-          {author} / {publisher} / {publishedDate}
+          {author} / {publisher} / {formattedDate}
         </p>
       </div>
       <div>
