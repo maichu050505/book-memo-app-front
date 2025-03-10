@@ -1,11 +1,23 @@
 import { useContext } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
+import { AuthContext } from "../../providers/AuthProvider";
 import { Meatball } from "../Meatball/Meatball.jsx";
 import "../../../pages/app.scss";
 import styles from "./ReviewBox.module.scss";
 
-export const ReviewBox = () => {
-  const { review, rating, date } = useContext(ReviewContext);
+export const ReviewBox = ({ review: reviewProp }) => {
+  // ReviewContext から自分のレビュー情報を取得
+  const reviewCtx = useContext(ReviewContext);
+  const { user } = useContext(AuthContext);
+  // reviewProp が渡されている場合はそれを優先する
+  const reviewText = reviewProp?.reviewText || reviewCtx.review;
+  const rating = reviewProp?.rating ?? reviewCtx.rating;
+  const date = reviewProp?.date || reviewCtx.date;
+  // 投稿者情報（props.review がある場合はその user を、なければデフォルトを使用）
+  const reviewUser = reviewProp?.user;
+  const userName = reviewUser ? reviewUser.username : "ゲストさん";
+  // ログイン中のユーザーがこのレビューの投稿者かどうかを判定
+  const isOwnReview = reviewUser ? Number(reviewUser.id) === Number(user?.id) : true;
 
   // 星を表示する関数（EditReviewと同じロジック）
   const renderStars = () => {
@@ -34,13 +46,14 @@ export const ReviewBox = () => {
   };
 
   // GET の結果がセットされる前はローディング状態にする
-  if (!date && review === "") {
+  if (!date && reviewText === "") {
     return <div>レビューを読み込み中…</div>;
   }
 
   return (
     <div className={`${styles.reviewBox} mb60`}>
-      <Meatball type="editAndDeleteReview" />
+      {/* 自分のレビューの場合のみ Meatball を表示 */}
+      {isOwnReview && <Meatball type="editAndDeleteReview" />}
       <div className={styles.info}>
         <div className={styles.icon}>
           <img src="./img/icon_user.svg" alt="" />
@@ -52,7 +65,7 @@ export const ReviewBox = () => {
       </div>
       <div className="starsCurrent mb10">{renderStars()}</div>
       <div className={styles.review_txt}>
-        <p>{review}</p>
+        <p>{reviewText}</p>
       </div>
     </div>
   );

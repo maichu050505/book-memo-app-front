@@ -1,6 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
+import { useAllReviews } from "../../../hooks/books/useAllReviews.js";
 import "../../../pages/app.scss";
 import { EditReview } from "../EditReview/EditReview.jsx";
 import { ReviewBox } from "../ReviewBox/ReviewBox.jsx";
@@ -25,6 +26,7 @@ export const Tabs = () => {
   } = useContext(ReviewContext);
   const { memos } = useContext(MemoContext);
 
+  // ここは自分のレビュー取得用
   useEffect(() => {
     const initializeReview = async () => {
       try {
@@ -76,6 +78,9 @@ export const Tabs = () => {
     }
   }, [bookId, setReview, setRating, setDate, setIsEditingReview, user]);
 
+  // 他ユーザーも含めた全レビューを取得するカスタムフック
+  const { reviews: allReviews, loading: loadingOthers, error: errorOthers } = useAllReviews(bookId);
+
   return (
     <div className="tabs-container">
       <div className="tabs">
@@ -116,7 +121,15 @@ export const Tabs = () => {
         {selectedTab === "others" && (
           <div className="tab-content">
             <Heading key="h3_review" type="h3" children="評価と感想" />
-            <ReviewBox key="reviewBox" />
+            {loadingOthers ? (
+              <p>読み込み中…</p>
+            ) : errorOthers ? (
+              <p style={{ color: "red" }}>{errorOthers}</p>
+            ) : allReviews.length === 0 ? (
+              <p>他の人のレビューはまだありません</p>
+            ) : (
+              allReviews.map((rev) => <ReviewBox key={rev.id} review={rev} />)
+            )}
           </div>
         )}
       </div>
