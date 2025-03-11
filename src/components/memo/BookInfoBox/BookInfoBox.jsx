@@ -1,9 +1,10 @@
-import { memo, useContext } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 import { AuthContext } from "../../providers/AuthProvider.jsx";
+import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 
 const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
@@ -15,6 +16,28 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
 
   // user が存在する場合に、book.id と user.id を渡す
   const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id, user ? user.id : null);
+
+  // ReviewContext からレビュー数を取得
+  const { reviewCount, setReviewCount } = useContext(ReviewContext);
+
+  useEffect(() => {
+    const fetchReviewCount = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/books/${id}/reviews/count`);
+        if (!res.ok) {
+          throw new Error("レビュー数の取得に失敗しました");
+        }
+        const data = await res.json();
+        setReviewCount(data.count); // サーバーから取得したレビュー数をセット
+      } catch (error) {
+        console.error("レビュー数の取得エラー:", error);
+      }
+    };
+
+    if (id) {
+      fetchReviewCount();
+    }
+  }, [id]);
 
   // 日付を日本語形式に変換する
   const formattedDate = new Date(publishedDate).toLocaleDateString("ja-JP", {
@@ -85,7 +108,8 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
           </p>
           <p className={styles.stars}>★4.27</p>
           <p className={styles.reviewers}>
-            <img src="./img/icon_review-blue.svg" alt="レビューを書いた人数" />1
+            <img src="./img/icon_review-blue.svg" alt="レビューを書いた人数" />
+            {reviewCount}
           </p>
         </div>
         <p className={styles.subInfo}>

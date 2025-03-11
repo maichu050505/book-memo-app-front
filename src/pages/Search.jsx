@@ -8,6 +8,7 @@ import { Heading } from "../components/common/Heading/Heading.jsx";
 import { Searchbox } from "../components/common/Searchbox/Searchbox.jsx";
 import { DropdownMenu } from "../components/common/DropdownMenu/DropdownMenu.jsx";
 import { BookInfoBox } from "../components/memo/BookInfoBox/BookInfoBox.jsx";
+import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
 
 export const Search = () => {
   const [results, setResults] = useState([]);
@@ -81,13 +82,15 @@ export const Search = () => {
             <ul className="list">
               {results?.map((result, index) => (
                 <li key={index}>
-                  <BookInfoBox
-                    book={result}
-                    id={result.id}
-                    buttonLinkTo="/single"
-                    buttonColor="blue"
-                    buttonChildren="本棚に登録"
-                  />
+                  <ReviewProvider bookId={result.id}>
+                    <BookInfoBox
+                      book={result}
+                      id={result.id}
+                      buttonLinkTo="/single"
+                      buttonColor="blue"
+                      buttonChildren="本棚に登録"
+                    />
+                  </ReviewProvider>
                 </li>
               ))}
             </ul>
