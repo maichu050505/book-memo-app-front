@@ -69,20 +69,20 @@ export const Search = () => {
       <Main width="648">
         <BackButton key="backButton" />
         <Heading key="pageTitle" type="h2" children={`検索結果：${searchTerm}`} />
-        <div className="searchResults">
-          {isLoading ? (
-            <p>検索中...</p>
-          ) : results.length === 0 ? (
-            searchTerm ? (
-              <p>「{searchTerm}」は見つかりませんでした。</p>
+        <ReviewProvider>
+          <div className="searchResults">
+            {isLoading ? (
+              <p>検索中...</p>
+            ) : results.length === 0 ? (
+              searchTerm ? (
+                <p>「{searchTerm}」は見つかりませんでした。</p>
+              ) : (
+                <p>検索キーワードを入力してください。</p>
+              )
             ) : (
-              <p>検索キーワードを入力してください。</p>
-            )
-          ) : (
-            <ul className="list">
-              {results?.map((result, index) => (
-                <li key={index}>
-                  <ReviewProvider bookId={result.id}>
+              <ul className="list">
+                {results?.map((result, index) => (
+                  <li key={index}>
                     <BookInfoBox
                       book={result}
                       id={result.id}
@@ -90,12 +90,12 @@ export const Search = () => {
                       buttonColor="blue"
                       buttonChildren="本棚に登録"
                     />
-                  </ReviewProvider>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </ReviewProvider>
       </Main>
     </>
   );
