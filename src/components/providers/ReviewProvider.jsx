@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useRef, useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthProvider";
 
 export const ReviewContext = createContext({});
@@ -10,9 +10,9 @@ export const ReviewProvider = ({ children, bookId }) => {
   const [review, setReview] = useState("");
   const [rating, setRating] = useState(0);
   const [date, setDate] = useState(null);
-  const isInitialRender = useRef(true); // 初回レンダリングを判定するフラグ
+  const [reviews, setReviews] = useState([]); // みんなのレビューを管理
 
-  // サーバーからレビューを取得して初期化
+  // 自分のレビューを取得して初期化
   useEffect(() => {
     const fetchReview = async () => {
       try {
@@ -52,6 +52,29 @@ export const ReviewProvider = ({ children, bookId }) => {
     }
   }, [bookId, user]);
 
+  // みんなのレビューを取得
+  useEffect(() => {
+    if (!bookId) return;
+
+    const fetchOtherReviews = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/books/${bookId}/reviews`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) {
+          throw new Error("全てのレビューの取得に失敗しました");
+        }
+        const data = await res.json();
+        setReviews(data.reviews || []);
+      } catch (err) {
+        console.error("全てのレビュー取得エラー:", err);
+      }
+    };
+
+    fetchOtherReviews();
+  }, [bookId]);
+
   return (
     <ReviewContext.Provider
       value={{
@@ -63,6 +86,8 @@ export const ReviewProvider = ({ children, bookId }) => {
         setRating,
         date,
         setDate,
+        reviews,
+        setReviews,
         bookId,
       }}
     >

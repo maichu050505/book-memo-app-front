@@ -6,8 +6,17 @@ import styles from "./EditReview.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
 
 export const EditReview = () => {
-  const { setIsEditingReview, review, setReview, rating, setRating, setDate, bookId } =
-    useContext(ReviewContext);
+  const {
+    setIsEditingReview,
+    review,
+    setReview,
+    rating,
+    setRating,
+    setDate,
+    setReviews,
+    reviews,
+    bookId,
+  } = useContext(ReviewContext);
   const { user } = useContext(AuthContext);
   const [localRating, setLocalRating] = useState(rating || 0); // 選択された星評価を管理
   const [hoverRating, setHoverRating] = useState(0); //hoverRatingは、ユーザーがホバーしている星のインデックス（星の番号）を保持
@@ -52,12 +61,6 @@ export const EditReview = () => {
     setRating(0);
   };
 
-  // 現在の日付を取得する関数
-  const getCurrentDate = () => {
-    const date = new Date();
-    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-  };
-
   const saveReview = async () => {
     try {
       const reviewData = {
@@ -73,7 +76,7 @@ export const EditReview = () => {
       }
       const token = localStorage.getItem("token");
 
-      const url = `http://localhost:3000//users/${user.id}/bookshelf/${bookId}/reviews`;
+      const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`;
       const res = await fetch(url, {
         method: "POST",
         headers: {
@@ -91,9 +94,21 @@ export const EditReview = () => {
       console.log("サーバーからの応答:", result);
 
       if (result && result.review) {
-        setReview(result.review.reviewText);
-        setRating(result.review.rating || 0);
+        setReview(localReview);
+        setRating(localRating);
         setDate(result.review.date || new Date().toLocaleDateString());
+
+        // みんなのレビュー一覧も更新
+        setReviews((prevReviews) => {
+          const updatedReviews = prevReviews.map((r) =>
+            r.userId === user.id ? { ...r, reviewText: localReview, rating: localRating } : r
+          );
+
+          // ユーザーのレビューが一覧になければ追加
+          const isUserReviewExist = updatedReviews.some((r) => r.userId === user.id);
+          return isUserReviewExist ? updatedReviews : [...updatedReviews, result.review];
+        });
+
         setIsEditingReview(false);
       } else {
         throw new Error("保存したレビューが不正です");

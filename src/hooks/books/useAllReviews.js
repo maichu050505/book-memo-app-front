@@ -1,8 +1,9 @@
 // 他のユーザーも含めた全てのレビューを取得
 import { useState, useEffect, useContext } from "react";
+import { ReviewContext } from "../../components/providers/ReviewProvider";
 
 export const useAllReviews = (bookId) => {
-  const [reviews, setReviews] = useState([]);
+  const { reviews, setReviews } = useContext(ReviewContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -32,7 +33,7 @@ export const useAllReviews = (bookId) => {
     };
 
     fetchOtherReviews();
-  }, [bookId]);
+  }, [bookId, setReviews]);
 
   return { reviews, loading, error };
 };

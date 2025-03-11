@@ -5,7 +5,7 @@ import { Meatball } from "../Meatball/Meatball.jsx";
 import "../../../pages/app.scss";
 import styles from "./ReviewBox.module.scss";
 
-export const ReviewBox = ({ review: reviewProp }) => {
+export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
   // ReviewContext から自分のレビュー情報を取得
   const reviewCtx = useContext(ReviewContext);
   const { user } = useContext(AuthContext);
@@ -13,9 +13,9 @@ export const ReviewBox = ({ review: reviewProp }) => {
   const reviewText = reviewProp?.reviewText || reviewCtx.review;
   const rating = reviewProp?.rating ?? reviewCtx.rating;
   const date = reviewProp?.date || reviewCtx.date;
-  // 投稿者情報（props.review がある場合はその user を、なければデフォルトを使用）
-  const reviewUser = reviewProp?.user;
-  const userName = reviewUser ? reviewUser.username : "ゲストさん";
+  // 投稿者情報（props.review がある場合はその user を、なければログインユーザーを使用）
+  const reviewUser = reviewProp?.user || user;
+  const userName = reviewUser ? reviewUser.username : "ゲスト";
   // ログイン中のユーザーがこのレビューの投稿者かどうかを判定
   const isOwnReview = reviewUser ? Number(reviewUser.id) === Number(user?.id) : true;
 
@@ -52,14 +52,14 @@ export const ReviewBox = ({ review: reviewProp }) => {
 
   return (
     <div className={`${styles.reviewBox} mb60`}>
-      {/* 自分のレビューの場合のみ Meatball を表示 */}
-      {isOwnReview && <Meatball type="editAndDeleteReview" />}
+      {/* myMemo タブの場合は Meatball を表示、others タブでは hideMeatball=true のため表示しない */}
+      {!hideMeatball && isOwnReview && <Meatball type="editAndDeleteReview" />}
       <div className={styles.info}>
         <div className={styles.icon}>
           <img src="./img/icon_user.svg" alt="" />
         </div>
         <div className={styles.info_txt}>
-          <p className={styles.userName}>MaiW さん</p>
+          <p className={styles.userName}>{userName} さん</p>
           <p className={styles.date}>{formatDateLocal(date)}</p>
         </div>
       </div>

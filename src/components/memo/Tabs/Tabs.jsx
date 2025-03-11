@@ -95,7 +95,7 @@ export const Tabs = () => {
           className={`tabItem ${selectedTab === "others" ? "active" : ""}`}
           onClick={() => setSelectedTab("others")}
         >
-          他の人の評価と感想
+          みんなの評価と感想
         </button>
       </div>
 
@@ -106,7 +106,11 @@ export const Tabs = () => {
             <Heading key="h3_status" type="h3" children="読書状況" />
             <Status key="status" />
             <Heading key="h3_review" type="h3" children="評価と感想" />
-            {isEditingReview ? <EditReview key="editReview" /> : <ReviewBox key="reviewBox" />}
+            {isEditingReview ? (
+              <EditReview key="editReview" />
+            ) : (
+              <ReviewBox key="reviewBox" review={{ user }} />
+            )}
             <Heading key="h3_memo" type="h3">
               読書メモ<span>※あなたにしか見えません</span>
             </Heading>
@@ -126,9 +130,9 @@ export const Tabs = () => {
             ) : errorOthers ? (
               <p style={{ color: "red" }}>{errorOthers}</p>
             ) : allReviews.length === 0 ? (
-              <p>他の人のレビューはまだありません</p>
+              <p>レビューはまだありません</p>
             ) : (
-              allReviews.map((rev) => <ReviewBox key={rev.id} review={rev} />)
+              allReviews.map((rev) => <ReviewBox key={rev.id} review={rev} hideMeatball={true} />)
             )}
           </div>
         )}
