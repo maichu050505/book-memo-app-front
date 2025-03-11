@@ -11,7 +11,6 @@ export const ReviewProvider = ({ children, bookId }) => {
   const [rating, setRating] = useState(0);
   const [date, setDate] = useState(null);
   const [reviews, setReviews] = useState([]); // みんなのレビューを管理
-  const [reviewCount, setReviewCount] = useState(0); // レビュー数を管理
   const [reviewUpdated, setReviewUpdated] = useState(false); // レビュー更新トリガー
 
   // 自分のレビューを取得して初期化
@@ -69,7 +68,6 @@ export const ReviewProvider = ({ children, bookId }) => {
         }
         const data = await res.json();
         setReviews(data.reviews || []);
-        setReviewCount(data.reviews ? data.reviews.length : 0); // レビュー数を設定
       } catch (err) {
         console.error("全てのレビュー取得エラー:", err);
       }
@@ -91,8 +89,6 @@ export const ReviewProvider = ({ children, bookId }) => {
         setDate,
         reviews,
         setReviews,
-        reviewCount,
-        setReviewCount,
         reviewUpdated,
         setReviewUpdated,
         bookId,

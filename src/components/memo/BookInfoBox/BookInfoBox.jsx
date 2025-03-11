@@ -4,7 +4,6 @@ import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 import { AuthContext } from "../../providers/AuthProvider.jsx";
-import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 
 const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
@@ -17,9 +16,33 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   // user が存在する場合に、book.id と user.id を渡す
   const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id, user ? user.id : null);
 
-  // ReviewContext からレビュー数を取得
-  const { reviewCount, setReviewCount } = useContext(ReviewContext);
+  // 本棚登録ユーザー数の状態を管理
+  const [bookshelfCount, setBookshelfCount] = useState(0);
 
+  // レビュー数の状態管理
+  const [reviewCount, setReviewCount] = useState(0);
+
+  // 本棚登録者数の取得
+  useEffect(() => {
+    const fetchBookshelfCount = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/books/${id}/bookshelf/count`);
+        if (!res.ok) {
+          throw new Error("本棚登録者数の取得に失敗しました");
+        }
+        const data = await res.json();
+        setBookshelfCount(data.count);
+      } catch (error) {
+        console.error("本棚登録者数の取得エラー:", error);
+      }
+    };
+
+    if (id) {
+      fetchBookshelfCount();
+    }
+  }, [id]);
+
+  // レビュー数の取得
   useEffect(() => {
     const fetchReviewCount = async () => {
       try {
@@ -63,6 +86,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
           throw new Error("本棚からの削除に失敗しました");
         }
         setIsInBookshelf(false);
+        setBookshelfCount((prev) => Math.max(prev - 1, 0)); // 本棚登録者数を即時更新
         window.alert("本棚から削除しました");
         //本棚に登録されていない場合は、
       } else {
@@ -79,6 +103,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
           throw new Error("本棚への登録に失敗しました");
         }
         setIsInBookshelf(true);
+        setBookshelfCount((prev) => prev + 1); // 本棚登録者数を即時更新
         window.alert("本棚に登録しました");
         if (onAction) onAction(true); // 状態変更時のコールバック
       }
@@ -104,7 +129,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
         <div className={styles.numbers}>
           <p className={styles.registrants}>
             <img src="./img/icon_registrant.svg" alt="" />
-            88
+            {bookshelfCount}
           </p>
           <p className={styles.stars}>★4.27</p>
           <p className={styles.reviewers}>

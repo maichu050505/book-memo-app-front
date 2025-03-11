@@ -6,15 +6,20 @@ export const useCheckBookshelf = (bookId, userId) => {
   const prevBookIdRef = useRef(null); // 前回の id を保存
 
   useEffect(() => {
-    // bookId と userId の両方がある場合のみ処理
-    if (!bookId || !userId || prevBookIdRef.current === bookId) return; // id が同じなら処理をスキップ
+    if (!bookId || !userId) return; // bookId と userId がない場合はスキップ
 
-    prevBookIdRef.current = bookId;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("認証トークンがありません");
+      return;
+    }
+
+    if (prevBookIdRef.current === bookId) return; // 前回と同じ bookId ならスキップ
+    prevBookIdRef.current = bookId; // 現在の bookId を保存
 
     const checkBookshelf = async () => {
       try {
-        console.log("本棚の状態確認リクエストを送信");
-        const token = localStorage.getItem("token");
+        console.log(`本棚の状態を確認中: userId=${userId}, bookId=${bookId}`);
         // クエリパラメーターに userId と filter (ここは "all" など固定でOK) を渡す
         const res = await fetch(`http://localhost:3000/users/${userId}/bookshelf?filter=all`, {
           method: "GET",
@@ -29,6 +34,10 @@ export const useCheckBookshelf = (bookId, userId) => {
           throw new Error(errorData.error || "本棚の状態確認に失敗しました");
         }
         const bookshelf = await res.json();
+        if (!Array.isArray(bookshelf)) {
+          console.error("本棚データの形式が不正です:", bookshelf);
+          return;
+        }
         console.log("取得した本棚データ:", bookshelf);
 
         // バックエンドでは、bookshelf を Book オブジェクトの配列として返しているはず

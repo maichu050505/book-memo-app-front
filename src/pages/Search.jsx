@@ -82,15 +82,13 @@ export const Search = () => {
             <ul className="list">
               {results?.map((result, index) => (
                 <li key={index}>
-                  <ReviewProvider bookId={result.id}>
-                    <BookInfoBox
-                      book={result}
-                      id={result.id}
-                      buttonLinkTo="/single"
-                      buttonColor="blue"
-                      buttonChildren="本棚に登録"
-                    />
-                  </ReviewProvider>
+                  <BookInfoBox
+                    book={result}
+                    id={result.id}
+                    buttonLinkTo="/single"
+                    buttonColor="blue"
+                    buttonChildren="本棚に登録"
+                  />
                 </li>
               ))}
             </ul>
