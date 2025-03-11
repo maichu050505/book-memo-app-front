@@ -15,6 +15,8 @@ export const EditReview = () => {
     setDate,
     setReviews,
     reviews,
+    setReviewUpdated,
+    toggleReviewUpdated,
     bookId,
   } = useContext(ReviewContext);
   const { user } = useContext(AuthContext);
@@ -97,6 +99,8 @@ export const EditReview = () => {
         setReview(localReview);
         setRating(localRating);
         setDate(result.review.date || new Date().toLocaleDateString());
+        // 即時更新を確実にするため `toggleReviewUpdated` を呼び出す
+        toggleReviewUpdated();
 
         // みんなのレビュー一覧も更新
         setReviews((prevReviews) => {

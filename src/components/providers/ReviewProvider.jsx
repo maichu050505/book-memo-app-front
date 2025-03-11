@@ -13,6 +13,11 @@ export const ReviewProvider = ({ children, bookId }) => {
   const [reviews, setReviews] = useState([]); // みんなのレビューを管理
   const [reviewUpdated, setReviewUpdated] = useState(false); // レビュー更新トリガー
 
+  // `reviewUpdated` を切り替える関数
+  const toggleReviewUpdated = () => {
+    setReviewUpdated((prev) => !prev);
+  };
+
   // 自分のレビューを取得して初期化
   useEffect(() => {
     const fetchReview = async () => {
@@ -91,6 +96,7 @@ export const ReviewProvider = ({ children, bookId }) => {
         setReviews,
         reviewUpdated,
         setReviewUpdated,
+        toggleReviewUpdated,
         bookId,
       }}
     >

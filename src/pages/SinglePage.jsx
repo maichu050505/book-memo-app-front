@@ -36,10 +36,11 @@ export const SinglePage = () => {
       <Main width="648">
         <BackButton key="backButton" />
         <Heading key="pageTitle" type="h2" children="本の詳細" />
-        <BookInfoBox key="bookInfoBox" book={book} buttonLinkTo="/dashboard" />
+
         <StatusProvider initialBookId={Number(id)}>
           <ReviewProvider bookId={id}>
             <MemoProvider bookId={id}>
+              <BookInfoBox key="bookInfoBox" book={book} buttonLinkTo="/dashboard" />
               <Tabs key="tabs" />
             </MemoProvider>
           </ReviewProvider>

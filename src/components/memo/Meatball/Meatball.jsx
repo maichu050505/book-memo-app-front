@@ -7,7 +7,16 @@ import styles from "./Meatball.module.scss";
 
 export const Meatball = ({ type, memoId }) => {
   const { user } = useContext(AuthContext);
-  const { setIsEditingReview, setReview, setRating, setDate, bookId } = useContext(ReviewContext);
+  const {
+    setIsEditingReview,
+    setReview,
+    setRating,
+    setDate,
+    bookId,
+    setReviews, // レビュー一覧を更新する
+    reviews,
+    toggleReviewUpdated, // レビュー削除後に即時反映
+  } = useContext(ReviewContext);
   const { toggleEditMemo, deleteMemo } = useContext(MemoContext);
   const { setWantToRead, setReadingNow, setReaded } = useContext(StatusContext);
   const onEditReview = () => {
@@ -17,11 +26,8 @@ export const Meatball = ({ type, memoId }) => {
 
   const onDeleteReview = async () => {
     const isConfirmed = window.confirm("本当に削除して良いですか？");
+    if (!isConfirmed) return;
     if (isConfirmed) {
-      setReview(""); // 初期化
-      setRating(0); // 初期化
-      setDate(null); // 初期化
-      setIsEditingReview(true); // 編集モードを終了
       try {
         const token = localStorage.getItem("token");
         const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`;
@@ -41,6 +47,19 @@ export const Meatball = ({ type, memoId }) => {
 
         const result = await res.json();
         console.log(result.message); // 成功メッセージ
+        // 削除したレビューを一覧から削除
+        setReviews((prevReviews) => prevReviews.filter((r) => r.userId !== user.id));
+
+        // BookInfoBox.jsx の useEffect を発火させる
+        toggleReviewUpdated();
+
+        // レビューの状態をクリア
+        setReview("");
+        setRating(0);
+        setDate(null);
+
+        // 編集モードを終了
+        setIsEditingReview(true);
       } catch (error) {
         console.error("レビュー削除エラー:", error);
       }

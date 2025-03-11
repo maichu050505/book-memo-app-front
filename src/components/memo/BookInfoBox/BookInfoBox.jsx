@@ -4,6 +4,7 @@ import styles from "./BookInfoBox.module.scss";
 import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 import { AuthContext } from "../../providers/AuthProvider.jsx";
+import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 
 const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
@@ -13,11 +14,16 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   // AuthContext からユーザー情報を取得
   const { user } = useContext(AuthContext);
 
+  const { reviewUpdated } = useContext(ReviewContext); // reviewUpdated を取得
+
   // user が存在する場合に、book.id と user.id を渡す
   const { isInBookshelf, setIsInBookshelf } = useCheckBookshelf(id, user ? user.id : null);
 
   // 本棚登録ユーザー数の状態を管理
   const [bookshelfCount, setBookshelfCount] = useState(0);
+
+  // 平均評価の状態
+  const [averageRating, setAverageRating] = useState(0);
 
   // レビュー数の状態管理
   const [reviewCount, setReviewCount] = useState(0);
@@ -42,6 +48,22 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
     }
   }, [id]);
 
+  // 平均評価の取得
+  useEffect(() => {
+    const fetchAverageRating = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/books/${id}/reviews/average-rating`);
+        if (!res.ok) throw new Error("平均評価の取得に失敗しました");
+        const data = await res.json();
+        setAverageRating(data.averageRating ? data.averageRating.toFixed(2) : "0.00"); // 小数点2桁まで表示
+      } catch (error) {
+        console.error("平均評価の取得エラー:", error);
+      }
+    };
+
+    if (id) fetchAverageRating();
+  }, [id, reviewUpdated]);
+
   // レビュー数の取得
   useEffect(() => {
     const fetchReviewCount = async () => {
@@ -60,7 +82,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
     if (id) {
       fetchReviewCount();
     }
-  }, [id]);
+  }, [id, reviewUpdated]);
 
   // 日付を日本語形式に変換する
   const formattedDate = new Date(publishedDate).toLocaleDateString("ja-JP", {
@@ -131,7 +153,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
             <img src="./img/icon_registrant.svg" alt="" />
             {bookshelfCount}
           </p>
-          <p className={styles.stars}>★4.27</p>
+          <p className={styles.stars}>★{averageRating}</p>
           <p className={styles.reviewers}>
             <img src="./img/icon_review-blue.svg" alt="レビューを書いた人数" />
             {reviewCount}
