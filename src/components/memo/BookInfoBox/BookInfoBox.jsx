@@ -92,6 +92,12 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   });
 
   const handleAction = async () => {
+    if (!user) {
+      // ログアウト時はアラートを出してログインページにリダイレクト
+      window.alert("ログインしてください。");
+      window.location.href = "/login";
+      return;
+    }
     try {
       const token = localStorage.getItem("token"); // トークンを取得
       //本棚に登録済みの場合は、

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useSearchParams } from "react-router-dom";
 import "./app.scss";
 import { Header } from "../components/common/Header/Header.jsx";
@@ -8,13 +8,16 @@ import { Heading } from "../components/common/Heading/Heading.jsx";
 import { Searchbox } from "../components/common/Searchbox/Searchbox.jsx";
 import { DropdownMenu } from "../components/common/DropdownMenu/DropdownMenu.jsx";
 import { BookInfoBox } from "../components/memo/BookInfoBox/BookInfoBox.jsx";
+import { HeaderButton } from "../components/common/HeaderButton/HeaderButton.jsx";
 import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
+import { AuthContext } from "../components/providers/AuthProvider.jsx";
 
 export const Search = () => {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // ローディング状態を管理
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get("query") || "";
+  const { user } = useContext(AuthContext); // ユーザー情報を取得
 
   // クエリパラメータの変化を検知して検索実行
   useEffect(() => {
@@ -64,7 +67,16 @@ export const Search = () => {
     <>
       <Header>
         <Searchbox key="searchbox" />
-        <DropdownMenu key="dropdownMenu" />
+        {user ? (
+          // ログイン状態: ドロップダウンメニュー
+          <DropdownMenu key="dropdownMenu" />
+        ) : (
+          // ログアウト状態: ログインと会員登録のリンク
+          <>
+            <HeaderButton key="loginButton" url="/login" buttonName="ログイン" />
+            <HeaderButton key="signinButton" url="/signin" buttonName="会員登録" />
+          </>
+        )}
       </Header>
       <Main width="648">
         <BackButton key="backButton" />

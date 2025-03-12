@@ -3,10 +3,13 @@ import styles from "./Bookshelf.module.scss";
 import { Book } from "../Book/Book.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import { useUserBooks } from "../../../hooks/books/useUserBooks";
+import { useAllBooks } from "../../../hooks/books/useAllBooks";
 
 export const Bookshelf = ({ filter = "all" }) => {
   const { user } = useContext(AuthContext);
-  const { books, loading, error } = useUserBooks(user ? user.id : null, filter);
+
+  // ユーザーがログインしている場合は useUserBooks、ログアウト状態なら useAllBooks を使用
+  const { books, loading, error } = user ? useUserBooks(user.id, filter) : useAllBooks();
 
   console.log("Bookshelf: books =", books); // デバッグ
 

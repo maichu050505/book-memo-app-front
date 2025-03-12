@@ -1,5 +1,5 @@
 import "./app.scss";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "../components/common/Header/Header.jsx";
 import { Searchbox } from "../components/common/Searchbox/Searchbox.jsx";
@@ -9,6 +9,8 @@ import { BackButton } from "../components/common/BackButton/BackButton.jsx";
 import { BookInfoBox } from "../components/memo/BookInfoBox/BookInfoBox.jsx";
 import { Heading } from "../components/common/Heading/Heading.jsx";
 import { Tabs } from "../components/memo/Tabs/Tabs.jsx";
+import { HeaderButton } from "../components/common/HeaderButton/HeaderButton.jsx";
+import { AuthContext } from "../components/providers/AuthProvider.jsx";
 import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
 import { MemoProvider } from "../components/providers/MemoProvider.jsx";
 import { StatusProvider } from "../components/providers/StatusProvider.jsx";
@@ -25,6 +27,7 @@ export const SinglePage = () => {
   console.log("取得したID:", id);
 
   const { book } = useBook(id);
+  const { user } = useContext(AuthContext); // ユーザー情報を取得
 
   if (!book) {
     return <div>書籍データがありません</div>;
@@ -32,7 +35,19 @@ export const SinglePage = () => {
 
   return (
     <>
-      <Header children={[<Searchbox key="searchbox" />, <DropdownMenu key="dropdownMenu" />]} />
+      <Header>
+        <Searchbox key="searchbox" /> {/* HeaderにSearchboxを配置 */}
+        {user ? (
+          // ログイン状態: ドロップダウンメニュー
+          <DropdownMenu key="dropdownMenu" />
+        ) : (
+          // ログアウト状態: ログインと会員登録のリンク
+          <>
+            <HeaderButton key="loginButton" url="/login" buttonName="ログイン" />
+            <HeaderButton key="signinButton" url="/signin" buttonName="会員登録" />
+          </>
+        )}
+      </Header>
       <Main width="648">
         <BackButton key="backButton" />
         <Heading key="pageTitle" type="h2" children="本の詳細" />

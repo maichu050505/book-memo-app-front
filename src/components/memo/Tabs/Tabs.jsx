@@ -13,7 +13,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 
 export const Tabs = () => {
   const { user } = useContext(AuthContext);
-  const [selectedTab, setSelectedTab] = useState("myMemo"); // 現在のタブを管理
+  const [selectedTab, setSelectedTab] = useState(user ? "myMemo" : "others"); // ログイン状態で初期タブを変更
   const {
     isEditingReview,
     setReview,
@@ -30,11 +30,8 @@ export const Tabs = () => {
   useEffect(() => {
     const initializeReview = async () => {
       try {
+        if (!user) return; // ログアウト時は取得しない
         const token = localStorage.getItem("token");
-        if (!user) {
-          console.error("ユーザー情報がありません");
-          return;
-        }
         const res = await fetch(
           `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`,
           {
@@ -83,25 +80,29 @@ export const Tabs = () => {
 
   return (
     <div className="tabs-container">
-      <div className="tabs">
-        {/* タブのヘッダー */}
-        <button
-          className={`tabItem ${selectedTab === "myMemo" ? "active" : ""}`}
-          onClick={() => setSelectedTab("myMemo")}
-        >
-          自分の読書メモ
-        </button>
-        <button
-          className={`tabItem ${selectedTab === "others" ? "active" : ""}`}
-          onClick={() => setSelectedTab("others")}
-        >
-          みんなの評価と感想
-        </button>
-      </div>
+      {/* ログイン状態のときだけタブを表示 */}
+      {user && (
+        <div className="tabs">
+          {/* タブのヘッダー */}
+          <button
+            className={`tabItem ${selectedTab === "myMemo" ? "active" : ""}`}
+            onClick={() => setSelectedTab("myMemo")}
+          >
+            自分の読書メモ
+          </button>
+          <button
+            className={`tabItem ${selectedTab === "others" ? "active" : ""}`}
+            onClick={() => setSelectedTab("others")}
+          >
+            みんなの評価と感想
+          </button>
+        </div>
+      )}
 
+      {/* ログアウト時は `others` タブの中身だけを表示 */}
       {/* タブの内容 */}
       <div className="tab-content-container">
-        {selectedTab === "myMemo" && (
+        {selectedTab === "myMemo" && user && (
           <div className="tab-content">
             <Heading key="h3_status" type="h3" children="読書状況" />
             <Status key="status" />
@@ -122,7 +123,7 @@ export const Tabs = () => {
             ))}
           </div>
         )}
-        {selectedTab === "others" && (
+        {(selectedTab === "others" || !user) && (
           <div className="tab-content">
             <Heading key="h3_review" type="h3" children="評価と感想" />
             {loadingOthers ? (
