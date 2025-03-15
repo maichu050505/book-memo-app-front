@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { ReviewContext } from "../../components/providers/ReviewProvider";
 
 export const useAllReviews = (bookId) => {
-  const { reviews, setReviews } = useContext(ReviewContext);
+  const { reviews, setReviews, reviewUpdated } = useContext(ReviewContext);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -33,7 +33,7 @@ export const useAllReviews = (bookId) => {
     };
 
     fetchOtherReviews();
-  }, [bookId, setReviews]);
+  }, [bookId, setReviews, reviewUpdated]);
 
   return { reviews, loading, error };
 };

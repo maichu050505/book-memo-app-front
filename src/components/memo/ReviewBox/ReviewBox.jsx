@@ -10,9 +10,11 @@ export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
   const reviewCtx = useContext(ReviewContext);
   const { user } = useContext(AuthContext);
   // reviewProp が渡されている場合はそれを優先する
-  const reviewText = reviewProp?.reviewText || reviewCtx.review;
+  // ※「||」オペレーターは、左側が falsy なら右側を返すため、空文字や 0 も上書きされる可能性があるため使わない。
+  // 「??」オペレーターは、左側が null または undefined の場合にだけ右側を返すので、空文字や 0 はそのまま有効な値として保持される。そのため、ここでは「??」を使う。
+  const reviewText = reviewProp?.reviewText ?? reviewCtx.review;
   const rating = reviewProp?.rating ?? reviewCtx.rating;
-  const date = reviewProp?.date || reviewCtx.date;
+  const date = reviewProp?.date ?? reviewCtx.date;
   // 投稿者情報（props.review がある場合はその user を、なければログインユーザーを使用）
   const reviewUser = reviewProp?.user || user;
   const userName = reviewUser ? reviewUser.username : "ゲスト";
