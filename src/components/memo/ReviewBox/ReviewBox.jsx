@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Meatball } from "../Meatball/Meatball.jsx";
