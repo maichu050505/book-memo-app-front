@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import styles from "./Book.module.scss";
 
-export const Book = ({ book }) => {
+export const Book = React.memo(({ book }) => {
   const [hasReview, setHasReview] = useState(null); // レビューの状態管理
   const [hasMemo, setHasMemo] = useState(null); // ユーザーのメモがあるかを管理
   const [averageRating, setAverageRating] = useState(0); // 平均評価の管理
@@ -71,7 +71,7 @@ export const Book = ({ book }) => {
   }, [book.id]);
 
   // 表示用関数
-  const renderStars = () => {
+  const renderStars = useMemo(() => {
     const fullStars = Math.floor(averageRating); // 整数部分の星
     const hasHalfStar = averageRating % 1 >= 0.5; // 0.5 以上なら半分の星を表示
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // 残りの空の星
@@ -88,7 +88,7 @@ export const Book = ({ book }) => {
         {"★".repeat(emptyStars)}
       </p>
     );
-  };
+  }, [averageRating]);
 
   if (!book) {
     // book が渡されない場合は何もレンダリングしない
@@ -102,7 +102,7 @@ export const Book = ({ book }) => {
       </div>
       <div className={styles.iconArea}>
         {/* 平均評価の星表示 */}
-        {renderStars()}
+        {renderStars}
         {/* レビューがある場合のみ表示 */}
         {hasReview && (
           <div className={styles.review}>
@@ -118,4 +118,4 @@ export const Book = ({ book }) => {
       </div>
     </Link>
   );
-};
+});
