@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Meatball } from "../Meatball/Meatball.jsx";
@@ -22,7 +22,7 @@ export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
   const isOwnReview = reviewUser ? Number(reviewUser.id) === Number(user?.id) : true;
 
   // 星を表示する関数（EditReviewと同じロジック）
-  const renderStars = () => {
+  const renderStars = useMemo(() => {
     return [1, 2, 3, 4, 5].map((star) => {
       // 評価の値に基づいて星の色を変更
       const starClass = rating >= star ? "yellow" : "gray";
@@ -33,7 +33,7 @@ export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
         </span>
       );
     });
-  };
+  }, [rating]);
 
   // ユーザーのタイムゾーンに合わせて日付をフォーマットする関数
   const formatDateLocal = (dateStr) => {
@@ -65,7 +65,7 @@ export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
           <p className={styles.date}>{formatDateLocal(date)}</p>
         </div>
       </div>
-      <div className="starsCurrent mb10">{renderStars()}</div>
+      <div className="starsCurrent mb10">{renderStars}</div>
       <div className={styles.review_txt}>
         <p>{reviewText}</p>
       </div>
