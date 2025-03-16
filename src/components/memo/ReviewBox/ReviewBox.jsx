@@ -5,7 +5,7 @@ import { Meatball } from "../Meatball/Meatball.jsx";
 import "../../../pages/app.scss";
 import styles from "./ReviewBox.module.scss";
 
-export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
+export const ReviewBoxComponent = ({ review: reviewProp, hideMeatball = false }) => {
   // ReviewContext から自分のレビュー情報を取得
   const reviewCtx = useContext(ReviewContext);
   const { user } = useContext(AuthContext);
@@ -72,3 +72,6 @@ export const ReviewBox = ({ review: reviewProp, hideMeatball = false }) => {
     </div>
   );
 };
+
+// React.memo でコンポーネント自体をメモ化
+export const ReviewBox = React.memo(ReviewBoxComponent);
