@@ -16,7 +16,8 @@ export const useUserBooks = (userId, filter = "all") => {
         // token を localStorage から取得
         const token = localStorage.getItem("token");
         const response = await fetch(
-          `http://localhost:3000/users/${userId}/bookshelf?filter=${filter}`,
+          // `http://localhost:3000/users/${userId}/bookshelf?filter=${filter}`,
+          getUrl(`/users/${userId}/bookshelf?filter=${filter}`),
           {
             method: "GET",
             headers: {

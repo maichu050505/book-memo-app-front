@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { AuthContext } from "../../components/providers/AuthProvider";
 import { jwtDecode } from "../../utils/jwtDecode";
 import { resetSessionExpired } from "../../utils/fetchWithAuth"; // セッション切れフラグ（sessionExpired）のリセット関数をインポート
+import { getUrl } from "../../utils/urls";
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ export const useLogin = () => {
     setLoading(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch(getUrl("/login"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
