@@ -9,7 +9,7 @@ export const useAllBooks = () => {
   useEffect(() => {
     const fetchAllBooks = async () => {
       try {
-        const res = await fetch("http://localhost:3000/books");
+        const res = await fetch(getUrl("/books"));
         if (!res.ok) {
           throw new Error("全ての本の取得に失敗しました");
         }
