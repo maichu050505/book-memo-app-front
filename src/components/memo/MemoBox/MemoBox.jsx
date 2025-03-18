@@ -3,6 +3,7 @@ import { Meatball } from "../Meatball/Meatball";
 import styles from "./MemoBox.module.scss";
 import { AddMemoBox } from "../AddMemoBox/AddMemoBox.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
+import { getUrl } from "../../../utils/urls.jsx";
 
 export const MemoBox = ({ memo }) => {
   console.log("MemoBoxでのmemo:", memo);
@@ -34,13 +35,10 @@ export const MemoBox = ({ memo }) => {
               const decodeUrl = (url) => decodeURIComponent(url); // URLデコードを適用
 
               const fixedImgSrc = decodeUrl(
-                imgSrc.startsWith("/uploads")
-                  ? `http://localhost:3000${imgSrc}`
-                  : `http://localhost:3000/uploads/${imgSrc}`
+                imgSrc.startsWith("/uploads") ? getUrl(`${imgSrc}`) : getUrl(`/uploads/${imgSrc}`)
               );
 
               console.log(`修正後の画像URL: ${fixedImgSrc}`);
-
 
               return (
                 <img

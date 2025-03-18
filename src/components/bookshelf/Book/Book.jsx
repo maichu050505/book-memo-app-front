@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { getUrl } from "../../../utils/urls";
 import { Link } from "react-router-dom";
 import styles from "./Book.module.scss";
 
@@ -13,7 +14,7 @@ export const Book = React.memo(({ book }) => {
     // メモがあるかチェック
     const fetchMemos = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${book.id}/memos`, {
+        const res = await fetch(getUrl(`/books/${book.id}/memos`), {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -33,7 +34,7 @@ export const Book = React.memo(({ book }) => {
     // レビューがあるかチェック
     const fetchReviews = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${book.id}/reviews/count`, {
+        const res = await fetch(getUrl(`/books/${book.id}/reviews/count`), {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
@@ -55,7 +56,7 @@ export const Book = React.memo(({ book }) => {
   useEffect(() => {
     const fetchAverageRating = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${book.id}/reviews/average-rating`);
+        const res = await fetch(getUrl(`/books/${book.id}/reviews/average-rating`));
         if (!res.ok) throw new Error("平均評価の取得に失敗しました");
 
         const data = await res.json();

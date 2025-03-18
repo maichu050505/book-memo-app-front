@@ -1,4 +1,5 @@
 import { useRef, useState, useContext, useEffect } from "react";
+import { getUrl } from "../../../utils/urls.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import styles from "./AddMemoBox.module.scss";
@@ -67,11 +68,11 @@ export const AddMemoBox = ({ type, memo }) => {
       let url, method;
       if (isEditing) {
         // 更新の場合：PUT /users/:userId/bookshelf/:bookId/memos/:memoId
-        url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos/${memo.id}`;
+        url = getUrl(`/users/${user.id}/bookshelf/${bookId}/memos/${memo.id}`);
         method = "PUT";
       } else {
         // 新規作成の場合：POST /users/:user.id/bookshelf/:bookId/memos
-        url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos`;
+        url = getUrl(`/users/${user.id}/bookshelf/${bookId}/memos`);
         method = "POST";
       }
 
@@ -149,9 +150,7 @@ export const AddMemoBox = ({ type, memo }) => {
         {localMemoImages.length > 0 && (
           <div className={styles.imagePreviewContainer}>
             {localMemoImages.map((image, index) => {
-              const imageUrl = image.startsWith("/uploads")
-                ? `http://localhost:3000${image}`
-                : image;
+              const imageUrl = image.startsWith("/uploads") ? getUrl(`${image}`) : image;
               console.log(`プレビュー画像 URL: ${imageUrl}`);
 
               return (

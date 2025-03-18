@@ -10,6 +10,7 @@ import { Heading } from "../../../components/common/Heading/Heading.jsx";
 import { Status } from "../Status/Status.jsx";
 import { AddMemoBox } from "../../../components/memo/AddMemoBox/AddMemoBox.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
+import { getUrl } from "../../../utils/urls.jsx";
 
 export const Tabs = () => {
   const { user } = useContext(AuthContext);
@@ -32,16 +33,13 @@ export const Tabs = () => {
       try {
         if (!user) return; // ログアウト時は取得しない
         const token = localStorage.getItem("token");
-        const res = await fetch(
-          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(getUrl(`/users/${user.id}/bookshelf/${bookId}/reviews`), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!res.ok) {
           throw new Error("レビューの取得に失敗しました");
         }

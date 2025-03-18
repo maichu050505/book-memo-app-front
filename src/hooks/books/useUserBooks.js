@@ -16,17 +16,13 @@ export const useUserBooks = (userId, filter = "all") => {
       try {
         // token を localStorage から取得
         const token = localStorage.getItem("token");
-        const response = await fetch(
-          // `http://localhost:3000/users/${userId}/bookshelf?filter=${filter}`,
-          getUrl(`/users/${userId}/bookshelf?filter=${filter}`),
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(getUrl(`/users/${userId}/bookshelf?filter=${filter}`), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("本棚のデータ取得に失敗しました");
         }

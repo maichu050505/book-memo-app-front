@@ -1,6 +1,7 @@
 // 他のユーザーも含めた全てのレビューを取得
 import { useState, useEffect, useContext } from "react";
 import { ReviewContext } from "../../components/providers/ReviewProvider";
+import { getUrl } from "../../utils/urls";
 
 export const useAllReviews = (bookId) => {
   const { reviews, setReviews, reviewUpdated } = useContext(ReviewContext);
@@ -14,7 +15,7 @@ export const useAllReviews = (bookId) => {
       setLoading(true);
       setError("");
       try {
-        const res = await fetch(`http://localhost:3000/books/${bookId}/reviews`, {
+        const res = await fetch(getUrl(`/books/${bookId}/reviews`), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

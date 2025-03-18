@@ -5,6 +5,7 @@ import { BookInfoButton } from "../BookInfoButton/BookInfoButton.jsx";
 import { useCheckBookshelf } from "../../../hooks/books/useCheckBookshelf.js";
 import { AuthContext } from "../../providers/AuthProvider.jsx";
 import { ReviewContext } from "../../providers/ReviewProvider.jsx";
+import { getUrl } from "../../../utils/urls.jsx";
 
 const BookInfoBoxComponent = ({ book, onAction }) => {
   const { title, author, publisher, publishedDate, coverImageUrl, amazonLink, id } = book;
@@ -32,7 +33,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   useEffect(() => {
     const fetchBookshelfCount = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${id}/bookshelf/count`);
+        const res = await fetch(getUrl(`/books/${id}/bookshelf/count`));
         if (!res.ok) {
           throw new Error("本棚登録者数の取得に失敗しました");
         }
@@ -52,7 +53,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   useEffect(() => {
     const fetchAverageRating = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${id}/reviews/average-rating`);
+        const res = await fetch(getUrl(`/books/${id}/reviews/average-rating`));
         if (!res.ok) throw new Error("平均評価の取得に失敗しました");
         const data = await res.json();
         setAverageRating(data.averageRating ? data.averageRating.toFixed(2) : "0.00"); // 小数点2桁まで表示
@@ -68,7 +69,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
   useEffect(() => {
     const fetchReviewCount = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${id}/reviews/count`);
+        const res = await fetch(getUrl(`/books/${id}/reviews/count`));
         if (!res.ok) {
           throw new Error("レビュー数の取得に失敗しました");
         }
@@ -103,7 +104,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
       //本棚に登録済みの場合は、
       if (isInBookshelf) {
         // 本棚から削除
-        const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf/${id}`, {
+        const res = await fetch(getUrl(`/users/${user.id}/bookshelf/${id}`), {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -119,7 +120,7 @@ const BookInfoBoxComponent = ({ book, onAction }) => {
         //本棚に登録されていない場合は、
       } else {
         // 本棚に登録
-        const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf`, {
+        const res = await fetch(getUrl(`/users/${user.id}/bookshelf`), {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,5 +1,6 @@
 // hooks/useRegister.js
 import { useState } from "react";
+import { getUrl } from "../../utils/urls";
 
 export const useRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,7 @@ export const useRegister = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/register", {
+      const response = await fetch(getUrl("/register"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

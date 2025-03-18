@@ -4,6 +4,7 @@ import { AuthContext } from "../../providers/AuthProvider.jsx";
 import "../../../pages/app.scss";
 import styles from "./EditReview.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
+import { getUrl } from "../../../utils/urls.jsx";
 
 export const EditReview = () => {
   const {
@@ -78,7 +79,7 @@ export const EditReview = () => {
       }
       const token = localStorage.getItem("token");
 
-      const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`;
+      const url = getUrl(`/users/${user.id}/bookshelf/${bookId}/reviews`);
       const res = await fetch(url, {
         method: "POST",
         headers: {

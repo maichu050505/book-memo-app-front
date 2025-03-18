@@ -3,6 +3,7 @@ import { ReviewContext } from "../../providers/ReviewProvider.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { StatusContext } from "../../providers/StatusProvider.jsx";
 import { AuthContext } from "../../providers/AuthProvider.jsx";
+import { getUrl } from "../../../utils/urls.jsx";
 import styles from "./Meatball.module.scss";
 
 export const Meatball = ({ type, memoId }) => {
@@ -30,7 +31,7 @@ export const Meatball = ({ type, memoId }) => {
     if (isConfirmed) {
       try {
         const token = localStorage.getItem("token");
-        const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`;
+        const url = getUrl(`/users/${user.id}/bookshelf/${bookId}/reviews`);
 
         // サーバーにDELETEリクエストを送信
         const res = await fetch(url, {
@@ -89,7 +90,7 @@ export const Meatball = ({ type, memoId }) => {
     if (isConfirmed) {
       try {
         const token = localStorage.getItem("token");
-        const url = `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos/${memoId}`;
+        const url = getUrl(`/users/${user.id}/bookshelf/${bookId}/memos/${memoId}`);
         console.log(`Deleting memo with URL: ${url}`);
 
         const res = await fetch(url, {

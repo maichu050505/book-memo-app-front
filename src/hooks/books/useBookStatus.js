@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../components/providers/AuthProvider";
 import { fetchWithAuth } from "../../utils/fetchWithAuth";
+import { getUrl } from "../../utils/urls";
 
 export const useBookStatus = (bookId) => {
   const { user } = useContext(AuthContext);
@@ -18,7 +19,7 @@ export const useBookStatus = (bookId) => {
           throw new Error("トークンが存在しません");
         }
         const response = await fetchWithAuth(
-          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/status`
+          getUrl(`/users/${user.id}/bookshelf/${bookId}/status`)
         );
         if (!response.ok) {
           const data = await response.json();
@@ -39,22 +40,3 @@ export const useBookStatus = (bookId) => {
 
   return { status, error, loading, setStatus };
 };
-
-// 読書状況を取得
-// export async function getBookStatus(bookId) {
-//   try {
-//     const response = await fetch(`http://localhost:3000/books/${bookId}/status`, {
-//       method: "GET",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     if (!response.ok) {
-//       throw new Error("ステータス取得に失敗しました");
-//     }
-//     return await response.json();
-//   } catch (error) {
-//     console.error("getBookStatus エラー:", error);
-//     throw error;
-//   }
-// }

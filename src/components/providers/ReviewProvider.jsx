@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthProvider";
+import { getUrl } from "../../utils/urls";
 
 export const ReviewContext = createContext({});
 
@@ -28,16 +29,13 @@ export const ReviewProvider = ({ children, bookId }) => {
           console.error("ユーザー情報がありません");
           return;
         }
-        const res = await fetch(
-          `http://localhost:3000/users/${user.id}/bookshelf/${bookId}/reviews`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const res = await fetch(getUrl(`/users/${user.id}/bookshelf/${bookId}/reviews`), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
         if (!res.ok) {
           throw new Error("レビューの取得に失敗しました");
         }
@@ -64,7 +62,7 @@ export const ReviewProvider = ({ children, bookId }) => {
 
     const fetchOtherReviews = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/books/${bookId}/reviews`, {
+        const res = await fetch(getUrl(`/books/${bookId}/reviews`), {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });

@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useEffect, useContext } from "react";
 import { AuthContext } from "./AuthProvider";
+import { getUrl } from "../../utils/urls";
 
 // メモの初期状態
 const initialMemoState = {
@@ -89,7 +90,7 @@ export const MemoProvider = ({ children, bookId }) => {
     try {
       if (!user || !bookId) return;
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:3000/users/${user.id}/bookshelf/${bookId}/memos`, {
+      const res = await fetch(getUrl(`/users/${user.id}/bookshelf/${bookId}/memos`), {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

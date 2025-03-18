@@ -1,5 +1,6 @@
 // 指定した bookId と userId を元に、本棚（GET /users/:userId/bookshelf?filter=all）から対象の本が存在するかをブール値で返すフック。
 import { useEffect, useState, useRef } from "react";
+import { getUrl } from "../../utils/urls";
 
 export const useCheckBookshelf = (bookId, userId) => {
   const [isInBookshelf, setIsInBookshelf] = useState(false);
@@ -21,7 +22,7 @@ export const useCheckBookshelf = (bookId, userId) => {
       try {
         console.log(`本棚の状態を確認中: userId=${userId}, bookId=${bookId}`);
         // クエリパラメーターに userId と filter (ここは "all" など固定でOK) を渡す
-        const res = await fetch(`http://localhost:3000/users/${userId}/bookshelf?filter=all`, {
+        const res = await fetch(getUrl(`/users/${userId}/bookshelf?filter=all`), {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

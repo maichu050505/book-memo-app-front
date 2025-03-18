@@ -34,9 +34,7 @@ export const Search = () => {
           query: searchTerm, // 'query' パラメータとして送信
         });
 
-        const response = await fetch(
-          `http://localhost:3000/books/search?${searchParams.toString()}`
-        );
+        const response = await fetch(getUrl(`/books/search?${searchParams.toString()}`));
 
         if (!response.ok) {
           const errorText = await response.text(); // レスポンスボディも確認
