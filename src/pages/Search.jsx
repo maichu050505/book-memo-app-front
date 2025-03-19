@@ -11,6 +11,7 @@ import { BookInfoBox } from "../components/memo/BookInfoBox/BookInfoBox.jsx";
 import { HeaderButton } from "../components/common/HeaderButton/HeaderButton.jsx";
 import { ReviewProvider } from "../components/providers/ReviewProvider.jsx";
 import { AuthContext } from "../components/providers/AuthProvider.jsx";
+import { getUrl } from "../utils/urls.jsx";
 
 export const Search = () => {
   const [results, setResults] = useState([]);
