@@ -26,9 +26,15 @@ export const SinglePage = () => {
   const id = params.get("id"); // params.get("id")は、URLSearchParamsのメソッドの一つで、指定したクエリパラメータのキーidに対応する値、すなわち1などが取得できる。
   console.log("取得したID:", id);
 
-  const { book } = useBook(id);
+  const { book, isLoading } = useBook(id);
   const { user } = useContext(AuthContext); // ユーザー情報を取得
 
+  // まず、読み込み中の場合の処理
+  if (isLoading) {
+    return <div>書籍情報を取得中です…</div>;
+  }
+
+  // 読み込み完了後、データがない場合の処理
   if (!book) {
     return <div>書籍データがありません</div>;
   }
