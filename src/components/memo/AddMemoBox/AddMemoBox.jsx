@@ -4,6 +4,7 @@ import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import styles from "./AddMemoBox.module.scss";
 import { SubmitButton } from "../../../components/common/SubmitButton.jsx";
+import { toImageSrc } from "../../../utils/toImageSrc.js";
 
 export const AddMemoBox = ({ type, memo }) => {
   const fileInputRef = useRef(null);
@@ -36,8 +37,8 @@ export const AddMemoBox = ({ type, memo }) => {
 
     setLocalMemoImages((prevImages) => prevImages.filter((_, i) => i !== index));
 
-    // **新しく追加した画像なら削除リストに入れない**
-    if (removedImage.startsWith("/uploads")) {
+    // 既存画像（= blob: ではない）は削除リストへ
+    if (!removedImage.startsWith("blob:")) {
       setDeletedImages((prev) => [...prev, removedImage]);
     }
   };
@@ -150,7 +151,7 @@ export const AddMemoBox = ({ type, memo }) => {
         {localMemoImages.length > 0 && (
           <div className={styles.imagePreviewContainer}>
             {localMemoImages.map((image, index) => {
-              const imageUrl = image.startsWith("/uploads") ? getUrl(`${image}`) : image;
+              const imageUrl = image.startsWith("blob:") ? image : toImageSrc(image);
               console.log(`プレビュー画像 URL: ${imageUrl}`);
 
               return (

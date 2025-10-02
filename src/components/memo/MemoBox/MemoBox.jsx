@@ -4,6 +4,7 @@ import styles from "./MemoBox.module.scss";
 import { AddMemoBox } from "../AddMemoBox/AddMemoBox.jsx";
 import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { getUrl } from "../../../utils/urls.jsx";
+import { toImageSrc } from "../../../utils/toImageSrc.js";
 
 export const MemoBox = ({ memo }) => {
   console.log("MemoBoxでのmemo:", memo);
@@ -32,11 +33,8 @@ export const MemoBox = ({ memo }) => {
         {memo.image && memo.image.length > 0 && (
           <div className={styles.screenshot}>
             {memo.image.map((imgSrc, index) => {
-              const decodeUrl = (url) => decodeURIComponent(url); // URLデコードを適用
-
-              const fixedImgSrc = decodeUrl(
-                imgSrc.startsWith("/uploads") ? getUrl(`${imgSrc}`) : getUrl(`/uploads/${imgSrc}`)
-              );
+              const decodeUrl = (url) => decodeURIComponent(url);
+              const fixedImgSrc = decodeUrl(toImageSrc(imgSrc));
 
               console.log(`修正後の画像URL: ${fixedImgSrc}`);
 
