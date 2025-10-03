@@ -1,24 +1,20 @@
-import { useContext } from "react";
 import { Meatball } from "../Meatball/Meatball";
 import styles from "./MemoBox.module.scss";
 import { AddMemoBox } from "../AddMemoBox/AddMemoBox.jsx";
-import { MemoContext } from "../../providers/MemoProvider.jsx";
 import { getUrl } from "../../../utils/urls.jsx";
-import { toImageSrc } from "../../../utils/toImageSrc.js";
 
 export const MemoBox = ({ memo }) => {
   console.log("MemoBoxでのmemo:", memo);
   console.log("MemoBoxの画像 (JSON):", JSON.stringify(memo.memoImg));
 
-  // `memo.memoImg` を適切な配列に変換
+  // APIが memo.memoImg（"||"連結）でも、memo.image（配列）でも表示できるよう正規化
   let imagesArray = [];
-
-  if (!memo.memoImg || memo.memoImg === "null" || memo.memoImg === "undefined") {
-    imagesArray = []; // `null` や `"null"` の場合、空の配列をセット
-  } else if (typeof memo.memoImg === "string") {
-    imagesArray = memo.memoImg.split("||").filter(Boolean); // 文字列なら `||` で分割
-  } else if (Array.isArray(memo.memoImg)) {
-    imagesArray = memo.memoImg; // すでに配列ならそのまま使用
+  if (Array.isArray(memo?.image)) {
+    imagesArray = memo.image;
+  } else if (typeof memo?.memoImg === "string") {
+    imagesArray = memo.memoImg.split("||").filter(Boolean);
+  } else {
+    imagesArray = [];
   }
 
   console.log("修正後の画像配列:", imagesArray);
@@ -30,11 +26,18 @@ export const MemoBox = ({ memo }) => {
         <p style={{ whiteSpace: "pre-wrap" }}>{memo.text}</p>
 
         {/* メモ内の画像を表示 */}
-        {memo.image && memo.image.length > 0 && (
+        {imagesArray && imagesArray.length > 0 && (
           <div className={styles.screenshot}>
-            {memo.image.map((imgSrc, index) => {
+            {imagesArray.map((imgSrc, index) => {
               const decodeUrl = (url) => decodeURIComponent(url);
-              const fixedImgSrc = decodeUrl(toImageSrc(imgSrc));
+              // Supabase の絶対URLはそのまま、相対なら getUrl でバックエンドに解決
+              const fixedImgSrc = decodeUrl(
+                imgSrc.startsWith("http")
+                  ? imgSrc
+                  : imgSrc.startsWith("/uploads")
+                  ? getUrl(imgSrc)
+                  : getUrl(`/uploads/${imgSrc}`)
+              );
 
               console.log(`修正後の画像URL: ${fixedImgSrc}`);
 
