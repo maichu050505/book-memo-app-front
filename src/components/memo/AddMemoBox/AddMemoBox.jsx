@@ -24,54 +24,24 @@ export const AddMemoBox = ({ type, memo }) => {
 
   // ファイルが選択された時の処理 一時的なプレビュー用
   const handleFileChange = (event) => {
-    const files = Array.from(event.target.files);
-
-    // サイズ制限チェック（5MB/枚）
-    const oversized = files.find((file) => file.size > 5 * 1024 * 1024);
-    if (oversized) {
-      alert(`"${oversized.name}" は 5MB を超えています。アップロードできません。`);
-      // 同じファイルを選び直せるようにリセット
-      event.target.value = "";
-      return;
+    const files = event.target.files;
+    if (files) {
+      const newImages = Array.from(files).map((file) => URL.createObjectURL(file));
+      setLocalMemoImages((prevImages) => [...prevImages, ...newImages]); // 新しい画像を追加
     }
-
-    // 枚数制限チェック（最大10枚）
-    if (localMemoImages.length + files.length > 10) {
-      alert("画像は1つのメモにつき最大10枚までです");
-      event.target.value = "";
-      return;
-    }
-
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setLocalMemoImages((prev) => [...prev, ...newImages]);
-
-    // 次の選択で同じファイルも拾えるようにリセット
-    event.target.value = "";
   };
 
   // 画像を削除する関数
   const handleRemoveImage = (index) => {
     const removedImage = localMemoImages[index];
+
     setLocalMemoImages((prevImages) => prevImages.filter((_, i) => i !== index));
 
     // 既存画像（= blob: ではない）は削除リストへ
     if (!removedImage.startsWith("blob:")) {
       setDeletedImages((prev) => [...prev, removedImage]);
-    } else {
-      URL.revokeObjectURL(removedImage);
     }
   };
-
-  // コンポーネントのアンマウント時に blob: をまとめて後始末
-  useEffect(() => {
-    return () => {
-      localMemoImages.forEach((img) => {
-        if (typeof img === "string" && img.startsWith("blob:")) {
-          URL.revokeObjectURL(img);
-        }
-      });
-    };
-  }, [localMemoImages]);
 
   // テキストエリアの高さを自動調整する関数
   const handleInput = (event) => {
@@ -173,7 +143,7 @@ export const AddMemoBox = ({ type, memo }) => {
         <textarea
           ref={textareaRef}
           className={styles.addMemoBox}
-          placeholder="メモを入力してください。"
+          placeholder="メモを入力してください"
           onChange={handleInput}
           value={localMemoText}
         />

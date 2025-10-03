@@ -11,7 +11,6 @@ import { Status } from "../Status/Status.jsx";
 import { AddMemoBox } from "../../../components/memo/AddMemoBox/AddMemoBox.jsx";
 import { AuthContext } from "../../providers/AuthProvider";
 import { getUrl } from "../../../utils/urls.jsx";
-import styles from "./Tabs.module.css";
 
 export const Tabs = () => {
   const { user } = useContext(AuthContext);
@@ -112,13 +111,7 @@ export const Tabs = () => {
               <ReviewBox key="reviewBox" review={{ user }} />
             )}
             <Heading key="h3_memo" type="h3">
-              読書メモ
-              <br />
-              <span className={styles.notice}>※あなたにしか見えません</span>
-              <br />
-              <span className={styles.notice}>
-                ※ 1つのメモにつき画像は最大10枚、1枚あたり5MBまでアップロードできます。
-              </span>
+              読書メモ<span>※あなたにしか見えません</span>
             </Heading>
             {/* 新規メモの入力ボックスは常に表示 */}
             <AddMemoBox key="addMemoBox" type="add" />
