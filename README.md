@@ -39,7 +39,5 @@ React・Node.js・Express・Prisma・Supabase を用いて構築し、ログイ�
 
 ## ローカル開発手順
 
-git clone https://github.com/mai/book-memo-app.git
-cd book-memo-app-front
 npm install
 npm run dev
