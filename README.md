@@ -39,5 +39,7 @@ React・Node.js・Express・Prisma・Supabase を用いて構築し、ログイ�
 
 ## ローカル開発手順
 
+```bash
 npm install
 npm run dev
+```
